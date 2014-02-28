@@ -22,8 +22,8 @@ RULES=[
     ],
     proc do |tokens|
       [
-        { kind: :on_tstring_beg,      token: "\"" },
-        { kind: :on_tstring_end,      token: "\"" },
+        { kind: :on_tstring_beg, token: "\"" },
+        { kind: :on_tstring_end, token: "\"" },
       ]
     end
   ],
@@ -44,7 +44,7 @@ RULES=[
 
       tokens
     end
-  ]
+  ],
 ]
 
 is_match = true
