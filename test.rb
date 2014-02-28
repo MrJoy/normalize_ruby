@@ -8,5 +8,7 @@ sexp = Ripper.sexp(File.read(fname), fname)
 tokens = Ripper.tokenize(File.read(fname))
 
 #tokens = tokens.map
-puts tokens.join
+File.open(fname, "w") do |fh|
+  fh.write tokens.join
+end
 # puts Sorcerer.source(sexp, indent: true)
