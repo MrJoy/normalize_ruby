@@ -71,8 +71,4 @@ while(idx < lexemes.length)
   idx += 1
 end
 
-tokens = lexemes.map { |lexeme| lexeme[:token] }
-
-File.open(fname, "w") do |fh|
-  fh.write tokens.join
-end
+puts lexemes.map { |lexeme| lexeme[:token] }.join
