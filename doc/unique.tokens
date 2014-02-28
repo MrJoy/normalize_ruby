@@ -1,3 +1,5 @@
+on_CHAR
+on___end__
 on_backref
 on_backtick
 on_comma
@@ -9,6 +11,7 @@ on_embdoc_beg
 on_embdoc_end
 on_embexpr_beg
 on_embexpr_end
+on_embvar
 on_float
 on_gvar
 on_heredoc_beg
