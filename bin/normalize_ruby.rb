@@ -12,6 +12,11 @@ tokens = Ripper.
     { line: line_no, col: col_no, kind: kind, token: token }
   end
 
+DOUBLE_QUOTED_STRING_LITERAL=[
+  { kind: :on_tstring_beg, token: "\"" },
+  { kind: :on_tstring_end, token: "\"" },
+]
+
 RULES=[
   [
     # MATCH: Empty single-quoted string.
@@ -21,10 +26,7 @@ RULES=[
       { kind: :on_tstring_end,      token: "'" },
     ],
     proc do |tokens|
-      [
-        { kind: :on_tstring_beg, token: "\"" },
-        { kind: :on_tstring_end, token: "\"" },
-      ]
+      DOUBLE_QUOTED_STRING_LITERAL
     end
   ],
   [
