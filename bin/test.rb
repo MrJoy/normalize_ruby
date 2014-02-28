@@ -37,38 +37,42 @@ RULES=[
   ]
 ]
 
-idx = 0
-while(idx < lexemes.length)
-  RULES.select do |(pattern, action)|
-    is_match = true
-    last_idx = idx
-    pattern.each_with_index do |expectation, offset|
-      last_idx = idx + offset
+is_match = true
+while(is_match)
+  idx = 0
+  is_match = true
+  while(idx < lexemes.length)
+    RULES.select do |(pattern, action)|
+      is_match = true
+      last_idx = idx
+      pattern.each_with_index do |expectation, offset|
+        last_idx = idx + offset
 
-      expectation.keys.each do |key|
-        is_match = false unless(expectation[key] == lexemes[idx + offset][key])
+        expectation.keys.each do |key|
+          is_match = false unless(expectation[key] == lexemes[idx + offset][key])
+        end
+
+        break unless(is_match)
       end
 
-      break unless(is_match)
-    end
+      if(is_match)
+        prefix = (idx > 0) ? lexemes[0..(idx-1)] : []
+        suffix = (last_idx < lexemes.length) ? lexemes[(last_idx+1)..-1] : []
+        replacement = case action.class.to_s
+        when "String"
+          [{ :token => action }]
+        when "Array"
+          action
+        when "Proc"
+          action.call(lexemes[idx..last_idx])
+        end
 
-    if(is_match)
-      prefix = (idx > 0) ? lexemes[0..(idx-1)] : []
-      suffix = (last_idx < lexemes.length) ? lexemes[(last_idx+1)..-1] : []
-      replacement = case action.class.to_s
-      when "String"
-        [{ :token => action }]
-      when "Array"
-        action
-      when "Proc"
-        action.call(lexemes[idx..last_idx])
+        lexemes = prefix + replacement + suffix
+        idx = prefix.length + replacement.length - 1
       end
-
-      lexemes = prefix + replacement + suffix
-      idx = -1 # Start over so we can match against post-replacement stream...
     end
+    idx += 1
   end
-  idx += 1
 end
 
 puts lexemes.map { |lexeme| lexeme[:token] }.join
