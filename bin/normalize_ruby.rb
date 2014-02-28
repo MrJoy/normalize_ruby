@@ -39,7 +39,9 @@ RULES=[
       tokens[0][:token] = "\""
       tokens[1][:token] = tokens[1][:token].
         gsub(/\\'/, "'").
-        gsub(/"/, "\\\"")
+        gsub(/"/, "\\\"").
+        gsub(/\\/, "\\"*3).
+        gsub(/#\{/, "\\\#{")
       tokens[-1][:token] = "\""
 
       tokens
