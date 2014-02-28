@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    sorcerer (1.0.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  sorcerer
