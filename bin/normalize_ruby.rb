@@ -3,9 +3,14 @@
 require 'ripper'
 
 fname = ARGV.shift
-lexemes = Ripper.
+raise "Must specify filename!" unless(fname && fname != '')
+raise "No such file '#{fname}'!" unless(File.exist?(fname))
+
+tokens = Ripper.
   lex(File.read(fname), fname).
-  map { |((line_no, col_no), kind, token)| { line: line_no, col: col_no, kind: kind, token: token } }
+  map do |((line_no, col_no), kind, token)|
+    { line: line_no, col: col_no, kind: kind, token: token }
+  end
 
 RULES=[
   [
@@ -15,7 +20,12 @@ RULES=[
       { kind: :on_tstring_beg,      token: "'" },
       { kind: :on_tstring_end,      token: "'" },
     ],
-    "\"\""
+    proc do |tokens|
+      [
+        { kind: :on_tstring_beg,      token: "\"" },
+        { kind: :on_tstring_end,      token: "\"" },
+      ]
+    end
   ],
   [
     # MATCH: Non-empty single-quoted string.
@@ -41,7 +51,7 @@ is_match = true
 while(is_match)
   idx = 0
   is_match = true
-  while(idx < lexemes.length)
+  while(idx < tokens.length)
     RULES.select do |(pattern, action)|
       is_match = true
       last_idx = idx
@@ -49,25 +59,18 @@ while(is_match)
         last_idx = idx + offset
 
         expectation.keys.each do |key|
-          is_match = false unless(expectation[key] == lexemes[idx + offset][key])
+          is_match = false unless(expectation[key] == tokens[idx + offset][key])
         end
 
         break unless(is_match)
       end
 
       if(is_match)
-        prefix = (idx > 0) ? lexemes[0..(idx-1)] : []
-        suffix = (last_idx < lexemes.length) ? lexemes[(last_idx+1)..-1] : []
-        replacement = case action.class.to_s
-        when "String"
-          [{ :token => action }]
-        when "Array"
-          action
-        when "Proc"
-          action.call(lexemes[idx..last_idx])
-        end
+        prefix = (idx > 0) ? tokens[0..(idx-1)] : []
+        suffix = (last_idx < tokens.length) ? tokens[(last_idx+1)..-1] : []
+        replacement = action.call(tokens[idx..last_idx])
 
-        lexemes = prefix + replacement + suffix
+        tokens = prefix + replacement + suffix
         idx = prefix.length + replacement.length - 1
       end
     end
@@ -75,4 +78,4 @@ while(is_match)
   end
 end
 
-puts lexemes.map { |lexeme| lexeme[:token] }.join
+puts tokens.map { |token| token[:token] }.join
