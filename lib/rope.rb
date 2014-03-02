@@ -1,15 +1,13 @@
 require 'forwardable'
 
 require 'rope/concat_node'
-require 'rope/string_node'
-
-require 'rope/string_methods'
+require 'rope/array_node'
 
 module Rope
   class Rope
     extend Forwardable
 
-    def_delegators :@root, :to_s, :length, :rebalance!
+    def_delegators :@root, :to_a, :length, :rebalance!
 
     # Initializes a new rope
     def initialize(arg=nil)
@@ -17,9 +15,11 @@ module Rope
       when Node
         @root = arg
       when NilClass
-        @root = StringNode.new("")
+        @root = ArrayNode.new([])
+      when Array
+        @root = ArrayNode.new(arg)
       else
-        @root = StringNode.new(arg.to_s)
+        @root = ArrayNode.new([arg])
       end
     end
 
@@ -30,7 +30,7 @@ module Rope
 
     # Tests whether this rope is equal to another rope
     def ==(other)
-      to_s == other.to_s
+      to_a == other.to_a
     end
 
     # Creates a copy of this rope
@@ -45,7 +45,7 @@ module Rope
       case slice
       when Fixnum # slice(Fixnum) returns a plain Fixnum
         slice
-      when Node, String # create a new Rope with the returned tree as the root
+      when Node, Array # create a new Rope with the returned tree as the root
         Rope.new(slice)
       else
         nil
@@ -54,7 +54,7 @@ module Rope
     alias :[] :slice
 
     protected
-      # Root node (could either be a StringNode or some child of LeafNode)
+      # Root node (could either be a ArrayNode or some child of LeafNode)
       attr_reader :root
 
     private
@@ -63,8 +63,8 @@ module Rope
       def concatenate(other)
         # TODO: Automatically balance the tree if needed
         case other
-        when String
-          ConcatenationNode.new(root, StringNode.new(other))
+        when Array
+          ConcatenationNode.new(root, ArrayNode.new(other))
         when Rope
           ConcatenationNode.new(root, other.root)
         end

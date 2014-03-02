@@ -4,16 +4,16 @@ require 'rope/node'
 
 module Rope
   # Specifies a leaf node that contains a basic string
-  class StringNode < Node
+  class ArrayNode < Node
     extend Forwardable
 
     def_delegators :@data, :slice
-    def_delegator :@data, :slice, :char_at
+    def_delegator :@data, :slice, :'[]'
 
     # Initializes a node that contains a basic string
-    def initialize(string)
-      @data = string
-      @length = string.length
+    def initialize(arr)
+      @data = arr
+      @length = arr.length
       @depth = 0
     end
 
@@ -21,7 +21,7 @@ module Rope
       if length == @data.length
         self
       else
-        StringNode.new(@data.slice(from, length))
+        ArrayNode.new(@data.slice(from, length))
       end
     end
   end

@@ -25,12 +25,12 @@ module Rope
     def slice(arg0, *args)
       if args.length == 0
         if arg0.is_a?(Fixnum)
-          char_at(arg0)
+          self[arg0]
         elsif arg0.is_a?(Range)
           from, to = arg0.minmax
 
           # Special case when the range doesn't actually describe a valid range
-          return "" if from.nil? || to.nil?
+          return [] if from.nil? || to.nil?
 
           # Normalize so both from and to are positive indices
           if from < 0
@@ -44,21 +44,21 @@ module Rope
             subtree(from, (to - from) + 1)
           else
             # Range first is greater than range last
-            # Return empty string to match what String does
-            ""
+            # Return empty string to match what Array does
+            []
           end
         end
 
         # TODO: arg0.is_a?(Range)
         # TODO: arg0.is_a?(Regexp)
-        # TODO: arg0.is_a?(String)
+        # TODO: arg0.is_a?(Array)
       else
         arg1 = args[0] # may be slightly confusing; refer to method definition
         if arg0.is_a?(Fixnum) && arg1.is_a?(Fixnum) # Fixnum, Fixnum
           if arg1 >= 0
             subtree(arg0, arg1)
           else
-            # Negative length, return nil to match what String does
+            # Negative length, return nil to match what Array does
             nil
           end
         end
@@ -100,8 +100,8 @@ module Rope
       end
     end
 
-    # Returns the character at the specified index
-    def char_at(index)
+    # Returns the element at the specified index
+    def [](index)
       # Translate to positive index if given a negative one
       if index < 0
         index += @length
@@ -113,10 +113,10 @@ module Rope
       rindex = index - @left.length
       if rindex < 0
         # Requested index is in the left subtree
-        @left.char_at(index)
+        @left[index]
       else
         # Requested index is in the right subtree
-        @right.char_at(rindex)
+        @right[rindex]
       end
     end
   end

@@ -15,9 +15,9 @@ module Rope
       ConcatenationNode.new(self, other)
     end
 
-    # Gets the string representation of the underlying data in the tree
-    def to_s
-      data.to_s
+    # Gets the array representation of the underlying data in the tree
+    def to_a
+      data.to_a
     end
 
     # Rebalances this tree
