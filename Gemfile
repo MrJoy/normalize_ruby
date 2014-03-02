@@ -6,3 +6,5 @@ source 'https://rubygems.org'
 
 #https://github.com/methodmissing/cord
 #https://github.com/alindeman/rope
+
+gem "pry", group: :development
