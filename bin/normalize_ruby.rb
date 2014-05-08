@@ -12,6 +12,8 @@ tokens = Ripper.
     { line: line_no, col: col_no, kind: kind, token: token }
   end
 
+# TODO: Rule for "if" \s* "(" \s* (.+) \s* ")" => "if \1"
+# TODO: Rule for "%q" DELIM ... DELIM => "%q(" ... ")"
 DOUBLE_QUOTED_STRING_LITERAL=[
   { kind: :on_tstring_beg, token: "\"" },
   { kind: :on_tstring_end, token: "\"" },
