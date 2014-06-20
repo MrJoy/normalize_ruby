@@ -8,3 +8,6 @@ source 'https://rubygems.org'
 #https://github.com/alindeman/rope
 
 gem "pry", group: :development
+
+gem "egison"
+# http://www.egison.org/blog/ruby.html
