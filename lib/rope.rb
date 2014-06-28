@@ -1,3 +1,4 @@
+# Based on: https://github.com/alindeman/rope
 require 'forwardable'
 
 require 'rope/concat_node'
@@ -51,23 +52,25 @@ module Rope
         nil
       end
     end
+
     alias :[] :slice
 
-    protected
-      # Root node (could either be a ArrayNode or some child of LeafNode)
-      attr_reader :root
+  protected
 
-    private
-      # Generate a concatenation node to combine this rope and another rope
-      # or string
-      def concatenate(other)
-        # TODO: Automatically balance the tree if needed
-        case other
-        when Array
-          ConcatenationNode.new(root, ArrayNode.new(other))
-        when Rope
-          ConcatenationNode.new(root, other.root)
-        end
+    # Root node (could either be a ArrayNode or some child of LeafNode)
+    attr_reader :root
+
+  private
+    # Generate a concatenation node to combine this rope and another rope
+    # or string
+    def concatenate(other)
+      # TODO: Automatically balance the tree if needed
+      case other
+      when Array
+        ConcatenationNode.new(root, ArrayNode.new(other))
+      when Rope
+        ConcatenationNode.new(root, other.root)
       end
+    end
   end
 end
