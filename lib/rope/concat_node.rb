@@ -45,7 +45,6 @@ module Rope
           end
         end
 
-        # TODO: arg0.is_a?(Range)
         # TODO: arg0.is_a?(Regexp)
         # TODO: arg0.is_a?(Array)
       else
