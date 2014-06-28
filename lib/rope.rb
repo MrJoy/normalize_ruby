@@ -66,10 +66,14 @@ module Rope
     def concatenate(other)
       # TODO: Automatically balance the tree if needed
       case other
-      when Array
-        ConcatenationNode.new(root, ArrayNode.new(other))
+      when NilClass
+        root
       when Rope
         ConcatenationNode.new(root, other.root)
+      when Array
+        ConcatenationNode.new(root, ArrayNode.new(other))
+      else
+        ConcatenationNode.new(root, ArrayNode.new([other]))
       end
     end
   end
