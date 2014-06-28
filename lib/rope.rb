@@ -49,7 +49,7 @@ module Rope
       when Node, Array # create a new Rope with the returned tree as the root
         Rope.new(slice)
       else
-        nil
+        raise "Unimplemented!  Got: #{args.inspect}"
       end
     end
 

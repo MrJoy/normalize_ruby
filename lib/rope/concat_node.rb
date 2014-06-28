@@ -43,6 +43,8 @@ module Rope
             # Return empty string to match what Array does
             []
           end
+        else
+          raise "Unimplemented!  Got: #{arg0.inspect}"
         end
 
         # TODO: arg0.is_a?(Regexp)
@@ -56,6 +58,8 @@ module Rope
             # Negative length, return nil to match what Array does
             nil
           end
+        else
+          raise "Unimplemented!  Got: #{([arg0] + (args||[])).inspect}"
         end
 
         # TODO: arg0.is_a?(Regexp) && arg1.is_a?(Fixnum)
@@ -65,6 +69,7 @@ module Rope
     # Rebalances this tree
     def rebalance!
       # TODO
+      raise "Unimplemented!"
     end
 
     # Returns a node that represents a slice of this tree
