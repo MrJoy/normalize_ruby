@@ -3,8 +3,10 @@
 require 'ripper'
 
 fname = ARGV.shift
+outname = ARGV.shift
 raise "Must specify filename!" unless(fname && fname != '')
 raise "No such file '#{fname}'!" unless(File.exist?(fname))
+outname = fname unless(outname && outname != '')
 
 tokens = Ripper.
   lex(File.read(fname), fname).
@@ -84,4 +86,6 @@ while(is_match)
   end
 end
 
-puts tokens.map { |token| token[:token] }.join
+File.open(outname, "w") do |fh|
+  fh.write(tokens.map { |token| token[:token] }.join)
+end
