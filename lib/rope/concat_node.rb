@@ -33,12 +33,8 @@ module Rope
           return [] if from.nil? || to.nil?
 
           # Normalize so both from and to are positive indices
-          if from < 0
-            from += @length
-          end
-          if to < 0
-            to += @length
-          end
+          from += @length if from < 0
+          to += @length if to < 0
 
           if from <= to
             subtree(from, (to - from) + 1)
