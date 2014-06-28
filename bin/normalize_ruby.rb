@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'ripper'
+require_relative '../lib/normalize'
 
 fname = ARGV.shift
 outname = ARGV.shift
@@ -8,83 +8,10 @@ raise "Must specify filename!" unless(fname && fname != '')
 raise "No such file '#{fname}'!" unless(File.exist?(fname))
 outname = fname unless(outname && outname != '')
 
-tokens = Ripper.
-  lex(File.read(fname), fname).
-  map do |((line_no, col_no), kind, token)|
-    { line: line_no, col: col_no, kind: kind, token: token }
-  end
+processor = Normalize::Processor.new
 
-# TODO: Rule for "if" \s* "(" \s* (.+) \s* ")" => "if \1"
-# TODO: Rule for "%q" DELIM ... DELIM => "%q(" ... ")"
-DOUBLE_QUOTED_STRING_LITERAL=[
-  { kind: :on_tstring_beg, token: "\"" },
-  { kind: :on_tstring_end, token: "\"" },
-]
-
-RULES=[
-  [
-    # MATCH: Empty single-quoted string.
-    # REPLACEMENT: Empty double-quoted string.
-    [
-      { kind: :on_tstring_beg,      token: "'" },
-      { kind: :on_tstring_end,      token: "'" },
-    ],
-    proc do |tokens|
-      DOUBLE_QUOTED_STRING_LITERAL
-    end
-  ],
-  [
-    # MATCH: Non-empty single-quoted string.
-    # REPLACEMENT: Non-empty double-quoted string.
-    [
-      { kind: :on_tstring_beg,      token: "'" },
-      { kind: :on_tstring_content },
-      { kind: :on_tstring_end,      token: "'" },
-    ],
-    proc do |tokens|
-      tokens[0][:token] = "\""
-      tokens[1][:token] = tokens[1][:token].
-        gsub(/\\'/, "'").
-        gsub(/\\/, "\\"*3).
-        gsub(/"/, '\"').
-        gsub(/#\{/, "\\\#{")
-      tokens[-1][:token] = "\""
-
-      tokens
-    end
-  ],
-]
-
-is_match = true
-while(is_match)
-  idx = 0
-  is_match = true
-  while(idx < tokens.length)
-    RULES.select do |(pattern, action)|
-      is_match = true
-      last_idx = idx
-      pattern.each_with_index do |expectation, offset|
-        last_idx = idx + offset
-
-        expectation.keys.each do |key|
-          is_match = false unless(expectation[key] == tokens[idx + offset][key])
-        end
-
-        break unless(is_match)
-      end
-
-      if(is_match)
-        prefix = (idx > 0) ? tokens[0..(idx-1)] : []
-        suffix = (last_idx < tokens.length) ? tokens[(last_idx+1)..-1] : []
-        replacement = action.call(tokens[idx..last_idx])
-
-        tokens = prefix + replacement + suffix
-        idx = prefix.length + replacement.length - 1
-      end
-    end
-    idx += 1
-  end
-end
+tokens = processor.parse(File.read(fname), fname)
+tokens = processor.process(tokens)
 
 File.open(outname, "w") do |fh|
   fh.write(tokens.map { |token| token[:token] }.join)
