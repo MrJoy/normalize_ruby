@@ -1,5 +1,5 @@
-ruby '2.1.1'
-#ruby=ruby-2.1.1
+ruby '2.1.2'
+#ruby=ruby-2.1.2
 #ruby-gemset=normalize_ruby
 source 'https://rubygems.org'
 
