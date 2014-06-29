@@ -6,6 +6,7 @@ module Normalize
     def initialize(*args)
       if(args.length == 4)
         (@line, @col, @kind, @token) = *args
+        @skip_line = @skip_col = @skip_kind = @skip_token = false
       elsif(args.length == 1 && args[0].is_a?(Hash))
         @line       = args[0][:line]
         @col        = args[0][:col]
@@ -25,13 +26,41 @@ module Normalize
       return Token.new(*args)
     end
 
-    def to_s
+    def line=(val)
+      @line       = val
+      @skip_line  = false
+    end
+
+    def col=(val)
+      @col        = val
+      @skip_col   = false
+    end
+
+    def kind=(val)
+      @kind       = val
+      @skip_kind  = false
+    end
+
+    def token=(val)
+      @token      = val
+      @skip_token = false
+    end
+
+    def to_h
       result = {}
       result[:line]   = @line   unless(@skip_line)
       result[:col]    = @col    unless(@skip_col)
       result[:kind]   = @kind   unless(@skip_kind)
       result[:token]  = @token  unless(@skip_token)
-      return result.inspect
+      return result
+    end
+
+    def to_s
+      return "Normalize::Token[#{to_h.inspect}]"
+    end
+
+    def dup
+      return Token.new(to_h)
     end
 
     def ==(other)

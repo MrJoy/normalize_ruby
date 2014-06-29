@@ -42,13 +42,17 @@ module Normalize
       ALWAYS_DOUBLE_QUOTED_NONEMPTY = Filter.new(
         SimplePattern.new(Constants::SINGLE_QUOTED_STRING_LITERAL),
         proc do |tokens|
-          tokens[0][:token] = "\""
-          tokens[1][:token] = tokens[1][:token].
+          tokens[0] = tokens[0].dup
+          tokens[1] = tokens[1].dup
+          tokens[2] = tokens[2].dup
+
+          tokens[0].token = "\""
+          tokens[1].token = tokens[1].token.
             gsub(/\\'/, "'").
             gsub(/\\/, "\\"*3).
             gsub(/"/, '\"').
             gsub(/#\{/, "\\\#{")
-          tokens[-1][:token] = "\""
+          tokens[2].token = "\""
 
           tokens
         end

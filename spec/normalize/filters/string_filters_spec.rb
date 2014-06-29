@@ -7,9 +7,9 @@ describe Normalize::Filters::StringFilters do
 
   def tokens_for_string_literal(quote, content)
     return [
-      {          :kind => :on_tstring_beg,     :token => quote },
-      content ? {:kind => :on_tstring_content, :token => content } : nil,
-      {          :kind => :on_tstring_end,     :token => quote },
+      Normalize::Token[{          :kind => :on_tstring_beg,     :token => quote }],
+      content ? Normalize::Token[{:kind => :on_tstring_content, :token => content }] : nil,
+      Normalize::Token[{          :kind => :on_tstring_end,     :token => quote }],
     ].reject { |token| token.nil? }
   end
 
@@ -26,7 +26,7 @@ describe Normalize::Filters::StringFilters do
       end
 
       it "should be modified into a double-quoted empty string" do
-        expect(output).to eq expected
+        expect(output).to match expected
       end
     end
 
@@ -38,7 +38,7 @@ describe Normalize::Filters::StringFilters do
       end
 
       it "should not be modified" do
-        expect(output).to eq expected
+        expect(output).to match expected
       end
     end
   end
@@ -57,7 +57,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should be modified into a double-quoted string" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
 
@@ -69,7 +69,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should not be modified" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
     end
@@ -86,7 +86,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should be modified into a double-quoted string with escapes" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
 
@@ -99,7 +99,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should not be modified" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
     end
@@ -116,7 +116,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should be modified into " do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
 
@@ -129,7 +129,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should not be modified" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
     end
@@ -147,7 +147,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should be modified into a double-quoted string" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
 
@@ -161,7 +161,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should not be modified" do
-          expect(output).to eq expected
+          expect(output).to match expected
         end
       end
     end
@@ -178,7 +178,7 @@ describe Normalize::Filters::StringFilters do
       end
 
       it "should be modified into double-quoted string with escapes" do
-        expect(output).to eq expected
+        expect(output).to match expected
       end
     end
 
@@ -194,7 +194,7 @@ describe Normalize::Filters::StringFilters do
       end
 
       it "should be modified into double-quoted string with escapes" do
-        expect(output).to eq expected
+        expect(output).to match expected
       end
     end
 
@@ -210,7 +210,7 @@ describe Normalize::Filters::StringFilters do
       end
 
       it "should be modified into double-quoted string with escapes" do
-        expect(output).to eq expected
+        expect(output).to match expected
       end
     end
   end
