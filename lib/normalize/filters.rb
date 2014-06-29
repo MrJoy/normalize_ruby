@@ -46,5 +46,3 @@ module Normalize
     end
   end
 end
-
-require_relative './filters/string_filters'

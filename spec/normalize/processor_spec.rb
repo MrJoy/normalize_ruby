@@ -1,4 +1,4 @@
-require_relative '../../lib/normalize/processor'
+require 'normalize/processor'
 
 describe Normalize::Processor do
 end

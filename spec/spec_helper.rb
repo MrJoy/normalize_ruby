@@ -76,3 +76,5 @@ RSpec.configure do |config|
   end
 =end
 end
+
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)

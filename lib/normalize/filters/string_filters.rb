@@ -1,4 +1,6 @@
 # TODO: Rule for "%q" DELIM ... DELIM => "%q(" ... ")"
+require_relative '../filters'
+
 module Normalize
   module Filters
     module StringFilters
