@@ -166,26 +166,52 @@ describe Normalize::Filters::StringFilters do
       end
     end
 
+    context "a single-quoted string with an ignored newline escape" do
+      # Note that the \n doesn't become a newline when interpreted by Ruby.
+      #
+      # 'foo\nbar'
+      let(:example)  { tokens_for_string_literal("'", "foo\\nbar") }
+      let(:expected) { tokens_for_string_literal('"', "foo\\\\nbar") }
+
+      it "should match" do
+        expect(status).to be true
+      end
+
+      it "should be modified into double-quoted string with escapes" do
+        expect(output).to eq expected
+      end
+    end
+
+    context "a single-quoted string with interpolation markers" do
+      # Note that the #{} doesn't get interpolated when interpreted by Ruby.
+      #
+      # 'foo #{hash and braces} bar'
+      let(:example)  { tokens_for_string_literal("'", "foo \#{hash and braces} bar") }
+      let(:expected) { tokens_for_string_literal('"', "foo \\\#{hash and braces} bar") }
+
+      it "should match" do
+        expect(status).to be true
+      end
+
+      it "should be modified into double-quoted string with escapes" do
+        expect(output).to eq expected
+      end
+    end
 
 
-  # Note that the \n doesn't become a newline when interpreted by Ruby.
-  #
-  # 'foo\nbar'
-  let(:single_quoted_string_with_ignored_newline) do
-    tokens_for_string_literal("'", "foo\\nbar")
-  end
+    context "a single-quoted string with adjacent escapes" do
+      # 'adjacent escaping \\\n maybe even a \\...'
+      let(:example)  { tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...") }
+      # "adjacent escaping \\\\n maybe even a \\..."
+      let(:expected) { tokens_for_string_literal('"', "adjacent escaping \\\\\\\\n maybe even a \\\\...") }
 
-  # Note that the #{} doesn't get interpolated when interpreted by Ruby.
-  #
-  # 'foo #{hash and braces} bar'
-  let(:single_quoted_string_with_interpolation_markers) do
-    tokens_for_string_literal("'", "foo \#{hash and braces} bar")
-  end
+      it "should match" do
+        expect(status).to be true
+      end
 
-  # 'adjacent escaping \\\n maybe even a \\...'
-  let(:single_quoted_string_with_adjacent_escapes) do
-    tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...")
-  end
-
+      it "should be modified into double-quoted string with escapes" do
+        expect(output).to eq expected
+      end
+    end
   end
 end
