@@ -2,6 +2,12 @@ require 'ripper'
 
 module Normalize
   class Processor
+    attr_reader :rules
+
+    def initialize(rules)
+      @rules = rules
+    end
+
     def parse(src, fname)
       return Ripper.
         lex(src, fname).
@@ -11,12 +17,14 @@ module Normalize
     end
 
     def process(tokens)
+      rule_list = rules.to_a
+      raise "Must specify at least one rule!" if(rule_list.length == 0)
       is_match = true
       while(is_match)
         idx = 0
         is_match = true
         while(idx < tokens.length)
-          RULES.select do |(pattern, action)|
+          rule_list.select do |(pattern, action)|
             is_match = true
             last_idx = idx
             pattern.each_with_index do |expectation, offset|
