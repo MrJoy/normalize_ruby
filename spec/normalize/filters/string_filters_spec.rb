@@ -4,16 +4,14 @@ describe Normalize::Filters::StringFilters do
 
   def tokens_for_string_literal(quote, content)
     return [
-      {          :kind => :on_tstring_beg,     :token => quote},
-      content ? {:kind => :on_tstring_content, :token => content} : nil,
-      {          :kind => :on_tstring_end,     :token => quote},
+      {          :kind => :on_tstring_beg,     :token => quote },
+      content ? {:kind => :on_tstring_content, :token => content } : nil,
+      {          :kind => :on_tstring_end,     :token => quote },
     ].reject { |token| token.nil? }
   end
 
   describe "ALWAYS_DOUBLE_QUOTED_EMPTY" do
-    subject do
-      super()::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0)
-    end
+    subject { super()::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0) }
 
     context "a double-quoted empty string" do
       let(:example) { tokens_for_string_literal('"', nil) }
@@ -41,9 +39,7 @@ describe Normalize::Filters::StringFilters do
   end
 
   describe "ALWAYS_DOUBLE_QUOTED_NONEMPTY" do
-    subject do
-      super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0)
-    end
+    subject { super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0) }
 
     context "a string with no special characters" do
       context "when single-quoted" do
