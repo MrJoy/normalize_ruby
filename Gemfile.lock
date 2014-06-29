@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/MrJoy/code_counter.git
-  revision: 939ddceba5ecfc5d3d9b74ffe8751d7ccf8beb51
+  revision: 244522c559615ecf368e909b2f31531ae99f8a82
   specs:
     code_counter (0.3.1)
 
