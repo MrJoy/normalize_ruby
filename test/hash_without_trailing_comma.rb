@@ -1,4 +1,0 @@
-{
-  foo: "blah",
-  bar: "meh"
-}
