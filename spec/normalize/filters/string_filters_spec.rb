@@ -1,5 +1,7 @@
 require 'normalize/filters/string_filters'
 describe Normalize::Filters::StringFilters do
+  subject { Normalize::Filters::StringFilters }
+
   def tokens_for_string_literal(quote, content)
     return [
       {          :kind => :on_tstring_beg,     :token => quote},
@@ -8,15 +10,67 @@ describe Normalize::Filters::StringFilters do
     ].reject { |token| token.nil? }
   end
 
-  # "foo"
-  let(:double_quoted_string) do
-    tokens_for_string_literal('"', "foo")
+  describe "ALWAYS_DOUBLE_QUOTED_EMPTY" do
+    subject do
+      super()::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0)
+    end
+
+    context "a double-quoted empty string" do
+      let(:example) { tokens_for_string_literal('"', nil) }
+
+      it "should not match" do
+        expect(subject.first).to be false
+      end
+
+      it "should not be modified" do
+        expect(subject.last).to eq tokens_for_string_literal('"', nil)
+      end
+    end
+
+    context "a single-quoted empty string" do
+      let(:example) { tokens_for_string_literal("'", nil) }
+
+      it "should match" do
+        expect(subject.first).to be true
+      end
+
+      it "should be modified into a double-quoted empty string" do
+        expect(subject.last).to eq tokens_for_string_literal('"', nil)
+      end
+    end
   end
 
-  # 'foo'
-  let(:single_quoted_string) do
-    tokens_for_string_literal("'", "foo \"bar\" baz")
-  end
+  describe "ALWAYS_DOUBLE_QUOTED_NONEMPTY" do
+    subject do
+      super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0)
+    end
+
+    context "a string with no special characters" do
+      context "when single-quoted" do
+        let(:example) { tokens_for_string_literal("'", "foo") }
+
+        it "should match" do
+          expect(subject.first).to be true
+        end
+
+        it "should be modified into a double-quoted string" do
+          expect(subject.last).to eq tokens_for_string_literal('"', "foo")
+        end
+      end
+
+      context "when double-quoted" do
+        let(:example) { tokens_for_string_literal('"', "foo") }
+
+        it "should not match" do
+          expect(subject.first).to be false
+        end
+
+        it "should not be modified" do
+          expect(subject.last).to eq tokens_for_string_literal('"', "foo")
+        end
+      end
+    end
+
 
 
   # "foo \"bar\" baz"
@@ -74,36 +128,5 @@ describe Normalize::Filters::StringFilters do
     tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...")
   end
 
-  describe "ALWAYS_DOUBLE_QUOTED_EMPTY" do
-    subject do
-      Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0)
-    end
-
-    context "a double-quoted empty string" do
-      let(:example) { tokens_for_string_literal('"', nil) }
-
-      it "should not match the input" do
-        expect(subject.first).to be false
-      end
-
-      it "should not modify input" do
-        expect(subject.last).to eq tokens_for_string_literal('"', nil)
-      end
-    end
-
-    context "a single-quoted empty string" do
-      let(:example) { tokens_for_string_literal("'", nil) }
-
-      it "should match the input" do
-        expect(subject.first).to be true
-      end
-
-      it "should be modified into a double-quoted empty string" do
-        expect(subject.last).to eq tokens_for_string_literal('"', nil)
-      end
-    end
-  end
-
-  describe "ALWAYS_DOUBLE_QUOTED_NONEMPTY" do
   end
 end
