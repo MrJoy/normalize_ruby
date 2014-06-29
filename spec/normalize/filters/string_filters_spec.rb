@@ -2,6 +2,9 @@ require 'normalize/filters/string_filters'
 describe Normalize::Filters::StringFilters do
   subject { Normalize::Filters::StringFilters }
 
+  let(:status) { subject.first }
+  let(:output) { subject.last }
+
   def tokens_for_string_literal(quote, content)
     return [
       {          :kind => :on_tstring_beg,     :token => quote },
@@ -13,29 +16,29 @@ describe Normalize::Filters::StringFilters do
   describe "ALWAYS_DOUBLE_QUOTED_EMPTY" do
     subject { super()::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0) }
 
+    let(:expected) { tokens_for_string_literal('"', nil) }
+
     context "a single-quoted empty string" do
       let(:example)  { tokens_for_string_literal("'", nil) }
-      let(:expected) { tokens_for_string_literal('"', nil) }
 
       it "should match" do
-        expect(subject.first).to be true
+        expect(status).to be true
       end
 
       it "should be modified into a double-quoted empty string" do
-        expect(subject.last).to eq expected
+        expect(output).to eq expected
       end
     end
 
     context "a double-quoted empty string" do
-      let(:example)  { tokens_for_string_literal('"', nil) }
-      let(:expected) { tokens_for_string_literal('"', nil) }
+      let(:example)  { expected.dup }
 
       it "should not match" do
-        expect(subject.first).to be false
+        expect(status).to be false
       end
 
       it "should not be modified" do
-        expect(subject.last).to eq expected
+        expect(output).to eq expected
       end
     end
   end
@@ -44,59 +47,59 @@ describe Normalize::Filters::StringFilters do
     subject { super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0) }
 
     context "a string with no special characters" do
+      let(:expected) { tokens_for_string_literal('"', "foo") }
+
       context "when single-quoted" do
         let(:example)  { tokens_for_string_literal("'", "foo") }
-        let(:expected) { tokens_for_string_literal('"', "foo") }
 
         it "should match" do
-          expect(subject.first).to be true
+          expect(status).to be true
         end
 
         it "should be modified into a double-quoted string" do
-          expect(subject.last).to eq expected
+          expect(output).to eq expected
         end
       end
 
       context "when double-quoted" do
-        let(:example)  { tokens_for_string_literal('"', "foo") }
-        let(:expected) { tokens_for_string_literal('"', "foo") }
+        let(:example)  { expected.dup }
 
         it "should not match" do
-          expect(subject.first).to be false
+          expect(status).to be false
         end
 
         it "should not be modified" do
-          expect(subject.last).to eq expected
+          expect(output).to eq expected
         end
       end
     end
 
     context "a string with double-quotes" do
+      let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
+
       context "when single-quoted" do
         # 'foo "bar" baz'
         let(:example)  { tokens_for_string_literal("'", "foo \"bar\" baz") }
-        let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
 
         it "should match" do
-          expect(subject.first).to be true
+          expect(status).to be true
         end
 
         it "should be modified into " do
-          expect(subject.last).to eq expected
+          expect(output).to eq expected
         end
       end
 
       context "when double-quoted" do
         # "foo \"bar\" baz"
-        let(:example)  { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
-        let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
+        let(:example)  { expected.dup }
 
         it "should not match" do
-          expect(subject.first).to be false
+          expect(status).to be false
         end
 
         it "should not be modified" do
-          expect(subject.last).to eq expected
+          expect(output).to eq expected
         end
       end
     end
