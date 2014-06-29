@@ -19,5 +19,7 @@ group :test do
   gem "rspec"
 end
 
-gem "egison"
+# TODO: Review this to see if the authors either make Pattern non-private, or
+# TODO: otherwise allow matchers against non-trivial things.
+# gem "egison"
 # http://www.egison.org/blog/ruby.html
