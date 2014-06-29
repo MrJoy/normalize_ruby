@@ -1,4 +1,5 @@
 require 'ripper'
+require_relative './token'
 
 module Normalize
   class Processor
@@ -12,7 +13,7 @@ module Normalize
       return Ripper.
         lex(src, fname).
         map do |((line_no, col_no), kind, token)|
-          { line: line_no, col: col_no, kind: kind, token: token }
+          Token.new(line_no, col_no, kind, token)
         end
     end
 

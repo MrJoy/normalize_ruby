@@ -12,19 +12,19 @@ module Normalize
     module StringFilters
       module Constants
         SINGLE_QUOTED_EMPTY_STRING_LITERAL = [
-          { kind: :on_tstring_beg, token: "'" }.freeze,
-          { kind: :on_tstring_end, token: "'" }.freeze,
+          Normalize::Token[{ kind: :on_tstring_beg, token: "'" }],
+          Normalize::Token[{ kind: :on_tstring_end, token: "'" }],
         ].freeze
 
         DOUBLE_QUOTED_EMPTY_STRING_LITERAL = [
-          { kind: :on_tstring_beg, token: "\"" }.freeze,
-          { kind: :on_tstring_end, token: "\"" }.freeze,
+          Normalize::Token[{ kind: :on_tstring_beg, token: "\"" }],
+          Normalize::Token[{ kind: :on_tstring_end, token: "\"" }],
         ].freeze
 
         SINGLE_QUOTED_STRING_LITERAL = [
-          { kind: :on_tstring_beg, token: "'" }.freeze,
-          { kind: :on_tstring_content }.freeze,
-          { kind: :on_tstring_end, token: "'" }.freeze,
+          Normalize::Token[{ kind: :on_tstring_beg, token: "'" }],
+          Normalize::Token[{ kind: :on_tstring_content }],
+          Normalize::Token[{ kind: :on_tstring_end, token: "'" }],
         ].freeze
       end
 

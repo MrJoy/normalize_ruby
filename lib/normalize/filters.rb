@@ -1,4 +1,6 @@
 # TODO: Rule for "if" \s* "(" \s* (.+) \s* ")" => "if \1"
+require_relative './token'
+
 module Normalize
   class Pattern
     def match?(tokens, index)
@@ -16,10 +18,7 @@ module Normalize
     def match?(tokens, index)
       is_match = true
       expectations.each_with_index do |expectation, offset|
-        expectation.keys.each do |key|
-          is_match = false unless(expectation[key] == tokens[index + offset][key])
-        end
-
+        is_match = false unless(expectation == tokens[index + offset])
         break unless(is_match)
       end
 
