@@ -8,7 +8,10 @@ raise "Must specify filename!" unless(fname && fname != '')
 raise "No such file '#{fname}'!" unless(File.exist?(fname))
 outname = fname unless(outname && outname != '')
 
-processor = Normalize::Processor.new(Normalize::DefaultRules.new)
+processor = Normalize::Processor.new(
+  Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_EMPTY,
+  Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_NONEMPTY,
+)
 
 tokens = processor.parse(File.read(fname), fname)
 tokens = processor.process(tokens)

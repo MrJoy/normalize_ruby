@@ -2,10 +2,10 @@ require 'ripper'
 
 module Normalize
   class Processor
-    attr_reader :rules
+    attr_reader :filters
 
-    def initialize(rules)
-      @rules = rules
+    def initialize(*args)
+      @filters = Array(args)
     end
 
     def parse(src, fname)
@@ -17,34 +17,15 @@ module Normalize
     end
 
     def process(tokens)
-      rule_list = rules.to_a
-      raise "Must specify at least one rule!" if(rule_list.length == 0)
+      filter_list = filters.to_a
+      raise "Must specify at least one filter!" if(filter_list.length == 0)
       is_match = true
       while(is_match)
         idx = 0
         is_match = true
         while(idx < tokens.length)
-          rule_list.select do |(pattern, action)|
-            is_match = true
-            last_idx = idx
-            pattern.each_with_index do |expectation, offset|
-              last_idx = idx + offset
-
-              expectation.keys.each do |key|
-                is_match = false unless(expectation[key] == tokens[idx + offset][key])
-              end
-
-              break unless(is_match)
-            end
-
-            if(is_match)
-              prefix = (idx > 0) ? tokens[0..(idx-1)] : []
-              suffix = (last_idx < tokens.length) ? tokens[(last_idx+1)..-1] : []
-              replacement = action.call(tokens[idx..last_idx])
-
-              tokens = prefix + replacement + suffix
-              idx = prefix.length + replacement.length - 1
-            end
+          filters.each do |filter|
+            (is_match, tokens) = filter.apply(tokens, idx)
           end
           idx += 1
         end
