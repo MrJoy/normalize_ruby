@@ -104,19 +104,67 @@ describe Normalize::Filters::StringFilters do
       end
     end
 
+    context "a string with single-quotes" do
+      let(:expected) { tokens_for_string_literal('"', "foo's bar") }
 
+      context "when single-quoted" do
+        # 'foo\'s bar'
+        let(:example)  { tokens_for_string_literal("'", "foo\\'s bar") }
 
-  # "foo
-  # bar"
-  let(:double_quoted_string_with_newline) do
-    tokens_for_string_literal('"', "foo\nbar")
-  end
+        it "should match" do
+          expect(status).to be true
+        end
 
-  # 'foo
-  # bar'
-  let(:single_quoted_string_with_newline) do
-    tokens_for_string_literal("'", "foo\nbar")
-  end
+        it "should be modified into " do
+          expect(output).to eq expected
+        end
+      end
+
+      context "when double-quoted" do
+        # "foo's bar"
+        let(:example)  { expected.dup }
+
+        it "should not match" do
+          expect(status).to be false
+        end
+
+        it "should not be modified" do
+          expect(output).to eq expected
+        end
+      end
+    end
+
+    context "a string with a newline in it" do
+      let(:expected) { tokens_for_string_literal('"', "foo\nbar") }
+
+      context "when single-quoted" do
+        # 'foo
+        # bar'
+        let(:example)  { tokens_for_string_literal("'", "foo\nbar") }
+
+        it "should match" do
+          expect(status).to be true
+        end
+
+        it "should be modified into a double-quoted string" do
+          expect(output).to eq expected
+        end
+      end
+
+      context "when double-quoted" do
+        # "foo
+        # bar"
+        let(:example)  { expected.dup }
+
+        it "should not match" do
+          expect(status).to be false
+        end
+
+        it "should not be modified" do
+          expect(output).to eq expected
+        end
+      end
+    end
 
 
 
