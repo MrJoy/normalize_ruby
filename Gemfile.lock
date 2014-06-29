@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/MrJoy/code_counter.git
+  revision: 939ddceba5ecfc5d3d9b74ffe8751d7ccf8beb51
+  specs:
+    code_counter (0.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -9,6 +15,7 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
+    rake (10.1.0)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -27,6 +34,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  code_counter!
   egison
   pry
+  rake
   rspec

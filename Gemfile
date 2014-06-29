@@ -9,8 +9,15 @@ source 'https://rubygems.org'
 #https://github.com/RickCSong/rrope/
 #https://github.com/trans/rope/commit/985013abb3c8f1feb349f6beaf91763065aa520a
 
-gem "pry",    group: :development
-gem "rspec",  group: :test
+group :development do
+  gem "rake"
+  gem "pry"
+  gem "code_counter", git: "https://github.com/MrJoy/code_counter.git"
+end
+
+group :test do
+  gem "rspec"
+end
 
 gem "egison"
 # http://www.egison.org/blog/ruby.html
