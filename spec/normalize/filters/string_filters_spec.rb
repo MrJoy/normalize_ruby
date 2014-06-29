@@ -71,28 +71,36 @@ describe Normalize::Filters::StringFilters do
       end
     end
 
+    context "a string with double-quotes" do
+      context "when single-quoted" do
+        # 'foo "bar" baz'
+        let(:example)  { tokens_for_string_literal("'", "foo \"bar\" baz") }
+        let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
 
+        it "should match" do
+          expect(subject.first).to be true
+        end
 
-  # "foo \"bar\" baz"
-  let(:double_quoted_string_with_double_quotes) do
-    tokens_for_string_literal('"', "foo \\\"bar\\\" baz")
-  end
+        it "should be modified into " do
+          expect(subject.last).to eq expected
+        end
+      end
 
-  # 'foo "bar" baz'
-  let(:single_quoted_string_with_double_quotes) do
-    tokens_for_string_literal('"', "foo \"bar\" baz")
-  end
+      context "when double-quoted" do
+        # "foo \"bar\" baz"
+        let(:example)  { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
+        let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
 
+        it "should not match" do
+          expect(subject.first).to be false
+        end
 
-  # "foo's bar"
-  let(:double_quoted_string_with_single_quote) do
-    tokens_for_string_literal('"', "foo's bar")
-  end
+        it "should not be modified" do
+          expect(subject.last).to eq expected
+        end
+      end
+    end
 
-  # 'foo\'s bar'
-  let(:single_quoted_string_with_single_quote) do
-    tokens_for_string_literal('"', "foo\\'s bar")
-  end
 
 
   # "foo
