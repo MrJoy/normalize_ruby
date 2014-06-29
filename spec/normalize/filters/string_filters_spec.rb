@@ -85,7 +85,7 @@ describe Normalize::Filters::StringFilters do
           expect(status).to be true
         end
 
-        it "should be modified into " do
+        it "should be modified into a double-quoted string with escapes" do
           expect(output).to eq expected
         end
       end
