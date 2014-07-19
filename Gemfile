@@ -8,6 +8,13 @@ source 'https://rubygems.org'
 #https://github.com/alindeman/rope
 #https://github.com/RickCSong/rrope/
 #https://github.com/trans/rope/commit/985013abb3c8f1feb349f6beaf91763065aa520a
+#https://github.com/michaeledgar/laser
+#https://github.com/michaeledgar/redtree
+#https://github.com/michaeledgar/ripper-plus
+#https://github.com/michaeledgar/hash_syntax
+
+#https://www.ruby-forum.com/topic/1012891
+#https://bugs.ruby-lang.org/issues/4365
 
 group :development do
   gem "rake"
