@@ -72,32 +72,12 @@ module Normalize
 
           # No match.
           raise "This shouldn't have been possible! @state == #{@state}"
-
-          # if Constants::DOUBLE_QUOTED_STRING_LITERAL[@state] == token
-          #   # We have a match!
-          #   @state += 1
-
-          #   if token.kind == :on_tstring_content
-          #     # Now, make sure the string is one we want to muck with!
-
-          #     # Specifically, we don't want to have to escape...
-          #     return false if token.token =~ /'/        # ...single-quotes.
-          #     return false if token.token =~ /\n/       # ...newlines.
-          #     return false if token.token =~ /\\[^"#]/  # ...various escapes.
-          #   end
-
-          #   return true
-          # elsif @state != 3
-          #   # Got an unexpected token!
-          #   return false
-          # end
         }),
         proc do |tokens|
           output = [tokens.shift.dup]
           state = 0
           while(tokens.length > 0)
             token = tokens.shift
-            puts "#{state}: #{token.inspect}"
             case state
             when 0
               next if token == Constants::SPACE
