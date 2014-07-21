@@ -17,6 +17,10 @@ if ( foo ||
    bar )
 end
 
+if ( foo || # meh
+   bar ) # bleah
+end
+
 if foo||bar
 end
 
