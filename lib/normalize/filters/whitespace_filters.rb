@@ -1,5 +1,3 @@
-Normalize::Token[{:kind=>:on_nl}]
-
 require_relative '../filters'
 
 module Normalize
@@ -18,13 +16,13 @@ module Normalize
       #               constant or part of a comment.
       # REPLACEMENT:  Nada.
       STRIP_TRAILING_WHITESPACE_FROM_STATEMENTS = Filter.new(
-        SimplePattern.new(
+        SimplePattern.new([
           Constants::SPACE,
           [
             Constants::TERMINAL_NL,
             Constants::IGNORED_NL,
           ],
-        ),
+        ]),
         proc do |tokens|
           tokens.shift
           tokens
@@ -34,9 +32,9 @@ module Normalize
       # MATCH:        Trailing whitespace after comments.
       # REPLACEMENT:  Nada.
       STRIP_TRAILING_WHITESPACE_FROM_COMMENTS = Filter.new(
-        SimplePattern.new(
+        SimplePattern.new([
           Constants::COMMENT,
-        ),
+        ]),
         proc do |tokens|
           output = [tokens.shift.dup]
           output[0].token = output[0].token.rstrip
