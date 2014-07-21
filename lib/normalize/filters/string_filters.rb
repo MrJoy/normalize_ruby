@@ -85,7 +85,6 @@ module Normalize
 
           if Constants::DOUBLE_QUOTED_STRING_LITERAL[@state] == token
             # We have a match!
-            retval = true
             @state += 1
 
             if token.kind == :on_tstring_content
