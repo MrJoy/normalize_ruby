@@ -21,9 +21,12 @@ module Normalize
         end
       elsif idx.kind_of?(Range)
         # TODO: Replace this with a slicing array proxy...
-        result = Array.new(idx.max - idx.min)
-        idx.each do |i|
-          result[i - idx.min] = self[i]
+        head = idx.first
+        tail = idx.last
+        tail = @length + tail if tail < 0
+        result = Array.new(tail - head)
+        (head..tail).each do |i|
+          result[i - head] = self[i]
         end
       end
 
