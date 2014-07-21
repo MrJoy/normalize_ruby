@@ -26,6 +26,38 @@ module Normalize
     end
   end
 
+  class ArbitraryPattern < Pattern
+    attr_reader :rule
+
+    def initialize(rule)
+      @rule = rule
+    end
+
+    def match?(tokens, index)
+      is_match = false
+      rule.call(nil) # Reset state...
+
+      offset = 0
+      while !offset.nil?
+        token_matches = rule.call(tokens[index + offset])
+        if token_matches
+          # Looks like we have a match in progress...
+          is_match = true
+        elsif token_matches.nil?
+          # Done processing rules.  Yay!
+          break
+        elsif !token_matches
+          # Mismatch on pattern!
+          is_match = false
+          break
+        end
+        offset += 1
+      end
+
+      return is_match ? (offset+1) : -1
+    end
+  end
+
   class Filter
     def initialize(pat, act)
       @pattern = pat
