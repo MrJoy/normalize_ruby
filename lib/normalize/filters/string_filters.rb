@@ -92,7 +92,7 @@ module Normalize
 
               # Specifically, we don't want to have to escape...
               return false if token.token =~ /'/ # ...single-quotes.
-              return false if token.token =~ /\n/ # ...newlines.
+              return false if token.token =~ /[\n\r\f\b\a\e\s]/ # ...various meta-characters.
 
               if token.token =~ /\\/
                 # Uh-oh!  We have escaping.  Don't want to muck with this
