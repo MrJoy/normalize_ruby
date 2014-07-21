@@ -373,14 +373,13 @@ describe Normalize::Filters::StringFilters do
       #
       # 'foo\nbar'
       let(:example)  { tokens_for_string_literal("'", "foo\\nbar") }
-      let(:expected) { tokens_for_string_literal('"', "foo\\\\nbar") }
 
-      it "should match" do
-        expect(status).to be true
+      it "should not match" do
+        expect(status).to be false
       end
 
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
+      it "should not be modified" do
+        expect(output).to match example
       end
     end
 
@@ -389,30 +388,26 @@ describe Normalize::Filters::StringFilters do
       #
       # 'foo #{hash and braces} bar'
       let(:example)  { tokens_for_string_literal("'", "foo \#{hash and braces} bar") }
-      let(:expected) { tokens_for_string_literal('"', "foo \\\#{hash and braces} bar") }
 
-      it "should match" do
-        expect(status).to be true
+      it "should not match" do
+        expect(status).to be false
       end
 
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
+      it "should not be modified" do
+        expect(output).to match example
       end
     end
-
 
     context "a single-quoted string with adjacent escapes" do
       # 'adjacent escaping \\\n maybe even a \\...'
       let(:example)  { tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...") }
-      # "adjacent escaping \\\\n maybe even a \\..."
-      let(:expected) { tokens_for_string_literal('"', "adjacent escaping \\\\\\\\n maybe even a \\\\...") }
 
-      it "should match" do
-        expect(status).to be true
+      it "should not match" do
+        expect(status).to be false
       end
 
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
+      it "should not be modified" do
+        expect(output).to match example
       end
     end
   end
