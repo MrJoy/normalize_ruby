@@ -30,6 +30,9 @@ end
 
 if ( foo ) ||
    ( bar )
+
+if ( foo ) ||
+   ( bar )
 end
 
 foo if bar
