@@ -97,7 +97,7 @@ module Normalize
                 # string unless the ONLY form of escaping is `\"`!
                 is_ok = true
                 offset = 0
-                while offset = token.token.index('\\', offset + 1) && offset < (token.token.length + 1)
+                while (offset = token.token.index('\\', offset + 1)) && offset < (token.token.length + 1)
                   escaped_char = token.token[offset + 1]
                   if escaped_char != '"'
                     is_ok = false
