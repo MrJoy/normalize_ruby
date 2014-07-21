@@ -28,6 +28,10 @@ if ( ( foo ||
    bar ) )
 end
 
+if ( ( foo ) ||
+   ( bar ) )
+end
+
 foo if(bar)
 
 foo if ( bar ) # meh
