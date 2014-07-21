@@ -11,6 +11,7 @@ outname = fname unless(outname && outname != '')
 processor = Normalize::Processor.new(
   Normalize::Filters::StringFilters::ALWAYS_SINGLE_QUOTED_EMPTY,
   Normalize::Filters::StringFilters::PREFER_SINGLE_QUOTED_NONEMPTY,
+  Normalize::Filters::KeywordFilters::PREFER_NO_PARENS_ON_CONTROL_KEYWORDS,
 )
 
 if(fname == '-')
