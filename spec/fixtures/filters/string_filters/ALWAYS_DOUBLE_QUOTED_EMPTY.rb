@@ -41,6 +41,7 @@ module Dummy
   puts "\M-m"
   puts "\M-\C-m"
   puts "\q"
+  puts '\q'
   puts "\'"
   puts "\""
   puts "\\"
