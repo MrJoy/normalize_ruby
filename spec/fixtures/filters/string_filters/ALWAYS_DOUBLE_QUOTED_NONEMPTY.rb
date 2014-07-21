@@ -1,9 +1,9 @@
 module Dummy
-  $gvar = 'GVAR'
-  @ivar = 'IVAR'
-  @@cvar = 'CCVAR'
+  $gvar = "GVAR"
+  @ivar = "IVAR"
+  @@cvar = "CCVAR"
   puts ''
-  puts ''
+  puts ""
   puts "foo"
   puts "foo's bar"
   puts "foo \"bar\" baz"

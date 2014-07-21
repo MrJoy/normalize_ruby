@@ -34,6 +34,12 @@ describe Normalize::Filters::StringFilters do
     let(:fixture) { :ALWAYS_SINGLE_QUOTED_EMPTY }
     include_examples 'string filter examples'
   end
+
+  describe '::ALWAYS_DOUBLE_QUOTED_NONEMPTY' do
+    let(:fixture) { :ALWAYS_DOUBLE_QUOTED_NONEMPTY }
+    include_examples 'string filter examples'
+  end
+
   describe '::PREFER_SINGLE_QUOTED_NONEMPTY' do
     let(:fixture) { :PREFER_SINGLE_QUOTED_NONEMPTY }
     include_examples 'string filter examples'

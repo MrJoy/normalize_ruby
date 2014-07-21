@@ -2,6 +2,7 @@ module Dummy
   $gvar = 'GVAR'
   @ivar = 'IVAR'
   @@cvar = 'CCVAR'
+  puts ''
   puts ""
   puts 'foo'
   puts "foo's bar"
