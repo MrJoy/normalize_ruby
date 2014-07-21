@@ -22,8 +22,14 @@ else
   effective_fname = fname
 end
 tokens = processor.parse(contents, effective_fname)
-tokens = processor.process(tokens)
-result = tokens.map { |token| token.token }.join
+result = processor.
+  # Apply rules
+  process(tokens).
+  # Reconstitute source:
+  map(&:token).
+  join.
+  # Ensure exactly one trailing newline:
+  rstrip + "\n"
 
 if fname == '-'
   puts result
