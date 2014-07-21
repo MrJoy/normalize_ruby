@@ -108,18 +108,24 @@ module Normalize
                 # TODO: Track paren nesting and see if we need to do
                 # TODO: anything...
                 state += 1
-              else
-                raise "WAT: #{token.inspect}\n#{tokens.inspect}"
+                next
               end
             when 1
               next if token == Constants::SPACE
-
+              tokens.unshift(token)
+              state += 1
+              next
+            when 2
               if token == Constants::RPAREN
                 state += 1
+              elsif token == Constants::SPACE && tokens.length > 0 && tokens[0] == Constants::RPAREN
+                # Drop it on the floor...
               else
                 output << token.dup
               end
-            when 2
+
+              next
+            when 3
               next if token == Constants::SPACE
 
               if token == Constants::TERMINAL_COMMENT
@@ -130,7 +136,7 @@ module Normalize
                 output << token.dup
                 break
               end
-            when 3
+            when 4
               raise "WAT: #{token.inspect}\n#{tokens.inspect}"
             end
           end
