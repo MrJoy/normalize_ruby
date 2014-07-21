@@ -64,7 +64,7 @@ module Normalize
           tokens[0].token = '"'
           tokens[1].token = tokens[1].
             token.
-            split(/\n/).
+            split(/\n/, -1).
             map { |line| line.inspect.gsub(/(\A")|("\z)/, '') }.
             join("\n")
           tokens[2].token = '"'
