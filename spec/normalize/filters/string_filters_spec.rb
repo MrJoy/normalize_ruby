@@ -1,415 +1,209 @@
+require 'ostruct'
 require 'normalize/filters/string_filters'
+require 'normalize/processor'
+
 describe Normalize::Filters::StringFilters do
-  subject { Normalize::Filters::StringFilters }
+  subject { filter.apply(example) }
 
-  let(:status) { subject.first }
-  let(:output) { subject.last }
+  let(:klass)   { Normalize::Filters::StringFilters }
+  let(:status)  { subject.first }
+  let(:output)  { subject.last }
 
-  def tokens_for_string_literal(quote, content)
-    return [
-      Normalize::Token[{          :kind => :on_tstring_beg,     :token => quote }],
-      content ? Normalize::Token[{:kind => :on_tstring_content, :token => content }] : nil,
-      Normalize::Token[{          :kind => :on_tstring_end,     :token => quote }],
-    ].reject { |token| token.nil? }
+  let(:fixture)       { fixtures[index] }
+  let(:example)       { examples[index] }
+  let(:expected)      { expectations[index] }
+
+  let(:raw_strings) do
+    processor = Normalize::Processor.new
+    File.
+      read('spec/fixtures/filters/string_filters/raw_strings.txt').
+      split(/\|/).
+      map(&:rstrip).
+      map do |str|
+        single_quoted = "'" + str.gsub(/\\/, '\\\\').gsub(/'/, '\\\\\'') + "'"
+        double_quoted = str.inspect
+        single_quoted = processor.parse(single_quoted, '.../raw_strings.txt').map(&:ignore_position)
+        double_quoted = processor.parse(double_quoted, '.../raw_strings.txt').map(&:ignore_position)
+        OpenStruct.new(
+          literal:        str,
+          single_quoted:  single_quoted,
+          double_quoted:  double_quoted,
+        )
+      end
   end
 
-  describe "ALWAYS_DOUBLE_QUOTED_EMPTY" do
-    subject { super()::ALWAYS_DOUBLE_QUOTED_EMPTY.apply(example, 0) }
-
-    let(:expected) { tokens_for_string_literal('"', nil) }
-
-    context "a single-quoted empty string" do
-      let(:example)  { tokens_for_string_literal("'", nil) }
-
-      it "should match" do
-        expect(status).to be true
-      end
-
-      it "should be modified into a double-quoted empty string" do
-        expect(output).to match expected
-      end
-    end
-
-    context "a double-quoted empty string" do
-      let(:example)  { expected.dup }
-
-      it "should not match" do
-        expect(status).to be false
-      end
-
-      it "should not be modified" do
-        expect(output).to match expected
-      end
-    end
+  let(:all_strings) do
+    raw_strings.map(&:single_quoted) +
+    raw_strings.map(&:double_quoted)
   end
 
-  describe "ALWAYS_SINGLE_QUOTED_EMPTY" do
-    subject { super()::ALWAYS_SINGLE_QUOTED_EMPTY.apply(example, 0) }
+  let(:empty)             { raw_strings[0] }
+  let(:simple)            { raw_strings[1] }
+  let(:single_quote)      { raw_strings[2] }
+  let(:double_quote)      { raw_strings[3] }
+  let(:hash_brace)        { raw_strings[4] }
+  let(:hash_hash)         { raw_strings[5] }
+  let(:hash_gvar)         { raw_strings[6] }
+  let(:hash_ivar)         { raw_strings[7] }
+  let(:hash_cvar)         { raw_strings[8] }
+  let(:adjacent_escapes)  { raw_strings[9] }
+  let(:bogus_escape)      { raw_strings[10] }
+  let(:newline)           { raw_strings[11] }
 
-    let(:expected) { tokens_for_string_literal("'", nil) }
-
-    context "a double-quoted empty string" do
-      let(:example)  { tokens_for_string_literal('"', nil) }
-
-      it "should match" do
-        expect(status).to be true
-      end
-
-      it "should be modified into a single-quoted empty string" do
-        expect(output).to match expected
-      end
-    end
-
-    context "a single-quoted empty string" do
-      let(:example)  { expected.dup }
-
-      it "should not match" do
-        expect(status).to be false
-      end
-
-      it "should not be modified" do
-        expect(output).to match expected
+  shared_examples 'negative matches' do
+    context 'anything else' do
+      it("doesn't match, or modify anything") do
+        (all_strings - examples).each do |counter_example|
+          expect(filter.apply(counter_example)).to eq [false, counter_example]
+        end
       end
     end
   end
 
-  describe "ALWAYS_DOUBLE_QUOTED_NONEMPTY" do
-    subject { super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0) }
-
-    context "a string with no special characters" do
-      let(:expected) { tokens_for_string_literal('"', "foo") }
-
-      context "when single-quoted" do
-        let(:example)  { tokens_for_string_literal("'", "foo") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into a double-quoted string" do
-          expect(output).to match expected
-        end
-      end
-
-      context "when double-quoted" do
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a string with double-quotes" do
-      let(:expected) { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
-
-      context "when single-quoted" do
-        # 'foo "bar" baz'
-        let(:example)  { tokens_for_string_literal("'", "foo \"bar\" baz") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into a double-quoted string with escapes" do
-          expect(output).to match expected
-        end
-      end
-
-      context "when double-quoted" do
-        # "foo \"bar\" baz"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a string with single-quotes" do
-      let(:expected) { tokens_for_string_literal('"', "foo's bar") }
-
-      context "when single-quoted" do
-        # 'foo\'s bar'
-        let(:example)  { tokens_for_string_literal("'", "foo\\'s bar") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into " do
-          expect(output).to match expected
-        end
-      end
-
-      context "when double-quoted" do
-        # "foo's bar"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a string with a newline in it" do
-      let(:expected) { tokens_for_string_literal('"', "foo\nbar") }
-
-      context "when single-quoted" do
-        # 'foo
-        # bar'
-        let(:example)  { tokens_for_string_literal("'", "foo\nbar") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into a double-quoted string" do
-          expect(output).to match expected
-        end
-      end
-
-      context "when double-quoted" do
-        # "foo
-        # bar"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a single-quoted string with an ignored newline escape" do
-      # Note that the \n doesn't become a newline when interpreted by Ruby.
-      #
-      # 'foo\nbar'
-      let(:example)  { tokens_for_string_literal("'", "foo\\nbar") }
-      let(:expected) { tokens_for_string_literal('"', "foo\\\\nbar") }
-
-      it "should match" do
-        expect(status).to be true
-      end
-
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
-      end
-    end
-
-    context "a single-quoted string with interpolation markers" do
-      # Note that the #{} doesn't get interpolated when interpreted by Ruby.
-      #
-      # 'foo #{hash and braces} bar'
-      let(:example)  { tokens_for_string_literal("'", "foo \#{hash and braces} bar") }
-      let(:expected) { tokens_for_string_literal('"', "foo \\\#{hash and braces} bar") }
-
-      it "should match" do
-        expect(status).to be true
-      end
-
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
-      end
-    end
-
-
-    context "a single-quoted string with adjacent escapes" do
-      # 'adjacent escaping \\\n maybe even a \\...'
-      let(:example)  { tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...") }
-      # "adjacent escaping \\\\n maybe even a \\..."
-      let(:expected) { tokens_for_string_literal('"', "adjacent escaping \\\\\\\\n maybe even a \\\\...") }
-
-      it "should match" do
-        expect(status).to be true
-      end
-
-      it "should be modified into double-quoted string with escapes" do
-        expect(output).to match expected
-      end
-    end
+  shared_examples 'positive match' do
+    it('matches')     { expect(status).to be true }
+    it('is modified') { expect(output).to match expected }
   end
 
-  describe "PREFER_SINGLE_QUOTED_NONEMPTY" do
-    subject { super()::PREFER_SINGLE_QUOTED_NONEMPTY.apply(example, 0) }
+  describe '::ALWAYS_DOUBLE_QUOTED_EMPTY' do
+    let(:filter)        { klass::ALWAYS_DOUBLE_QUOTED_EMPTY }
+    let(:fixtures)      { [empty] }
+    let(:examples)      { fixtures.map(&:single_quoted) }
+    let(:expectations)  { fixtures.map(&:double_quoted) }
 
-    context "a string with no special characters" do
-      let(:expected) { tokens_for_string_literal("'", "foo") }
-
-      context "when double-quoted" do
-        let(:example)  { tokens_for_string_literal('"', "foo") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into a single-quoted string" do
-          expect(output).to match expected
-        end
-      end
-
-      context "when single-quoted" do
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
+    context 'an empty, single-quoted string' do
+      let(:index) { 0 }
+      include_examples 'positive match'
     end
 
-    context "a string with double-quotes" do
-      let(:expected) { tokens_for_string_literal("'", "foo \"bar\" baz") }
-
-      context "when double-quoted" do
-        # 'foo "bar" baz'
-        let(:example)  { tokens_for_string_literal('"', "foo \\\"bar\\\" baz") }
-
-        it "should match" do
-          expect(status).to be true
-        end
-
-        it "should be modified into a single-quoted string" do
-          expect(output).to match expected
-        end
-      end
-
-      context "when single-quoted" do
-        # "foo \"bar\" baz"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a string with single-quotes" do
-      let(:expected) { tokens_for_string_literal('"', "foo's bar") }
-
-      context "when single-quoted" do
-        # 'foo\'s bar'
-        let(:example)  { tokens_for_string_literal("'", "foo\\'s bar") }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match example
-        end
-      end
-
-      context "when double-quoted" do
-        # "foo's bar"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match expected
-        end
-      end
-    end
-
-    context "a string with a newline in it" do
-      let(:expected) { tokens_for_string_literal('"', "foo\nbar") }
-
-      context "when single-quoted" do
-        # 'foo
-        # bar'
-        let(:example)  { tokens_for_string_literal("'", "foo\nbar") }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match example
-        end
-      end
-
-      context "when double-quoted" do
-        # "foo
-        # bar"
-        let(:example)  { expected.dup }
-
-        it "should not match" do
-          expect(status).to be false
-        end
-
-        it "should not be modified" do
-          expect(output).to match example
-        end
-      end
-    end
-
-    context "a single-quoted string with an ignored newline escape" do
-      # Note that the \n doesn't become a newline when interpreted by Ruby.
-      #
-      # 'foo\nbar'
-      let(:example)  { tokens_for_string_literal("'", "foo\\nbar") }
-
-      it "should not match" do
-        expect(status).to be false
-      end
-
-      it "should not be modified" do
-        expect(output).to match example
-      end
-    end
-
-    context "a single-quoted string with interpolation markers" do
-      # Note that the #{} doesn't get interpolated when interpreted by Ruby.
-      #
-      # 'foo #{hash and braces} bar'
-      let(:example)  { tokens_for_string_literal("'", "foo \#{hash and braces} bar") }
-
-      it "should not match" do
-        expect(status).to be false
-      end
-
-      it "should not be modified" do
-        expect(output).to match example
-      end
-    end
-
-    context "a single-quoted string with adjacent escapes" do
-      # 'adjacent escaping \\\n maybe even a \\...'
-      let(:example)  { tokens_for_string_literal("'", "adjacent escaping \\\\\\n maybe even a \\\\...") }
-
-      it "should not match" do
-        expect(status).to be false
-      end
-
-      it "should not be modified" do
-        expect(output).to match example
-      end
-    end
+    include_examples 'negative matches'
   end
 
+  describe '::ALWAYS_SINGLE_QUOTED_EMPTY' do
+    let(:filter)        { klass::ALWAYS_SINGLE_QUOTED_EMPTY }
+    let(:fixtures)      { [empty] }
+    let(:examples)      { fixtures.map(&:double_quoted) }
+    let(:expectations)  { fixtures.map(&:single_quoted) }
+
+    context 'an empty, double-quoted string' do
+      let(:index) { 0 }
+      include_examples 'positive match'
+    end
+
+    include_examples 'negative matches'
+  end
+
+  describe '::ALWAYS_DOUBLE_QUOTED_NONEMPTY' do
+    let(:filter)        { klass::ALWAYS_DOUBLE_QUOTED_NONEMPTY }
+    let(:fixtures)      do
+      [
+        simple, single_quote, double_quote, hash_brace, hash_hash, hash_gvar,
+        hash_ivar, hash_cvar, adjacent_escapes, bogus_escape, newline
+      ]
+    end
+    let(:examples)      { fixtures.map(&:single_quoted) }
+    let(:expectations)  { fixtures.map(&:double_quoted) }
+
+    context 'a simple, single-quoted string' do
+      let(:index) { 0 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing single-quotes' do
+      let(:index) { 1 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing double-quotes' do
+      let(:index) { 2 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#{`' do
+      let(:index) { 3 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `##`' do
+      let(:index) { 4 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#$`' do
+      let(:index) { 5 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#@`' do
+      let(:index) { 6 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#@@`' do
+      let(:index) { 7 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing adjacent escapes' do
+      let(:index) { 8 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing invalid escapes' do
+      let(:index) { 9 }
+      include_examples 'positive match'
+    end
+
+    include_examples 'negative matches'
+  end
+
+  describe '::PREFER_SINGLE_QUOTED_NONEMPTY' do
+    let(:filter)        { klass::PREFER_SINGLE_QUOTED_NONEMPTY }
+    let(:fixtures)      do
+      [
+        simple, double_quote, hash_brace, hash_hash, hash_gvar, hash_ivar, hash_cvar
+      ]
+      # single_quote, double_quote, hash_brace, hash_hash, hash_gvar,
+      #   hash_ivar, hash_cvar, bogus_escape, newline, adjacent_escapes
+    end
+    let(:examples)      { fixtures.map(&:double_quoted) }
+    let(:expectations)  { fixtures.map(&:single_quoted) }
+
+    context 'a simple, single-quoted string' do
+      let(:index) { 0 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing double quotes' do
+      let(:index) { 1 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#{`' do
+      let(:index) { 2 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `##`' do
+      let(:index) { 3 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#$`' do
+      let(:index) { 4 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#@`' do
+      let(:index) { 5 }
+      include_examples 'positive match'
+    end
+
+    context 'a single-quoted string containing `#@@`' do
+      let(:index) { 6 }
+      include_examples 'positive match'
+    end
+
+    include_examples 'negative matches'
+  end
 end

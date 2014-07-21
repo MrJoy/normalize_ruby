@@ -62,11 +62,11 @@ module Normalize
           tokens[2] = tokens[2].dup
 
           tokens[0].token = "\""
-          tokens[1].token = tokens[1].token.
+          tokens[1].token = tokens[1].
+            token.
             gsub(/\\'/, "'").
-            gsub(/\\/, "\\"*3).
-            gsub(/"/, '\"').
-            gsub(/#\{/, "\\\#{")
+            inspect.
+            gsub(/(\A")|("\z)/, '')
           tokens[2].token = "\""
 
           tokens
@@ -93,7 +93,6 @@ module Normalize
               # Specifically, we don't want to have to escape...
               return false if token.token =~ /'/ # ...single-quotes.
               return false if token.token =~ /\n/ # ...newlines.
-              return false if token.token =~ /#[#\{\$@]/ # ...interpolation.
 
               if token.token =~ /\\/
                 # Uh-oh!  We have escaping.  Don't want to muck with this
@@ -102,7 +101,7 @@ module Normalize
                 offset = 0
                 while (offset = token.token.index('\\', offset + 1))# && offset < (token.token.length + 1)
                   escaped_char = token.token[offset + 1]
-                  if escaped_char != '"'
+                  if !['"', '#'].include?(escaped_char)
                     is_ok = false
                     break
                   end
@@ -128,7 +127,10 @@ module Normalize
           tokens[0].token = "'"
           tokens[1].token = tokens[1].
             token.
+            gsub(/\\(["\\])/, '\1').
             inspect.
+            gsub(/\\(["\\])/, '\1').
+            gsub(/\\\\/, '').
             gsub(/(\A")|("\z)/, '')
           tokens[2].token = "'"
 
