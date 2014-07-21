@@ -7,7 +7,6 @@ describe Normalize::Filters::KeywordFilters do
   let(:fixtures)      { Pathname.new('spec/fixtures/filters/keyword_filters') }
   let(:filter)        { klass.const_get(fixture) }
   let(:processor)     { Normalize::Processor.new(filter) }
-  let(:expected_ruby) { File.read(fixtures + (fixture.to_s + '.rb')) }
 
   subject do
     tokens = processor.parse(input_ruby, '<...>')
@@ -16,6 +15,7 @@ describe Normalize::Filters::KeywordFilters do
   end
 
   let(:input_ruby)      { File.read(fixtures + 'input.rb') }
+  let(:expected_ruby)   { File.read(fixtures + (fixture.to_s + '.rb')) }
 
   shared_examples 'string filter examples' do
     it 'should perform all expected conversions, and leave everything else alone' do

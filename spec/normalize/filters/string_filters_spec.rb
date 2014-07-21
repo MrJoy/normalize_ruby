@@ -7,7 +7,6 @@ describe Normalize::Filters::StringFilters do
   let(:fixtures)      { Pathname.new('spec/fixtures/filters/string_filters') }
   let(:filter)        { klass.const_get(fixture) }
   let(:processor)     { Normalize::Processor.new(filter) }
-  let(:expected_ruby) { File.read(fixtures + (fixture.to_s + '.rb')) }
 
   subject do
     tokens = processor.parse(input_ruby, '<...>')
@@ -17,6 +16,8 @@ describe Normalize::Filters::StringFilters do
 
   let(:input_ruby)      { File.read(fixtures + 'input.rb') }
   let(:input_result)    { capture_stdout {  eval input_ruby } }
+
+  let(:expected_ruby)   { File.read(fixtures + (fixture.to_s + '.rb')) }
   let(:expected_result) { capture_stdout {  eval expected_ruby } }
 
   shared_examples 'string filter examples' do
