@@ -124,8 +124,10 @@ module Normalize
           tokens[2] = tokens[2].dup
 
           tokens[0].token = "'"
-          tokens[1].token = tokens[1].token.
-            gsub(/\\"/, '"')
+          tokens[1].token = tokens[1].
+            token.
+            inspect.
+            gsub(/(\A")|("\z)/, '')
           tokens[2].token = "'"
 
           tokens
