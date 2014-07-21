@@ -91,23 +91,9 @@ module Normalize
               # Now, make sure the string is one we want to muck with!
 
               # Specifically, we don't want to have to escape...
-              return false if token.token =~ /'/ # ...single-quotes.
-              return false if token.token =~ /[\n\r\f\b\a\e\s]/ # ...various meta-characters.
-
-              if token.token =~ /\\/
-                # Uh-oh!  We have escaping.  Don't want to muck with this
-                # string unless the ONLY form of escaping is `\"`!
-                is_ok = true
-                offset = 0
-                while (offset = token.token.index('\\', offset + 1))
-                  escaped_char = token.token[offset + 1]
-                  if !['"', '#'].include?(escaped_char)
-                    is_ok = false
-                    break
-                  end
-                end
-                return is_ok
-              end
+              return false if token.token =~ /'/          # ...single-quotes.
+              return false if token.token =~ /\n/         # ...newlines.
+              return false if token.token =~ /\\[^"#\\]/  # ...various escapes.
             end
 
             return true
@@ -127,10 +113,10 @@ module Normalize
           tokens[0].token = "'"
           tokens[1].token = tokens[1].
             token.
-            gsub(/\\(["\\])/, '\1').
+            gsub(/\\(["#\\])/, '\1').
             inspect.
-            gsub(/\\(["\\])/, '\1').
             gsub(/\\\\/, '').
+            gsub(/\\(["#\\])/, '\1').
             gsub(/(\A")|("\z)/, '')
           tokens[2].token = "'"
 
