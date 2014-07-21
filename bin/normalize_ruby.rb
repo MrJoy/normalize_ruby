@@ -9,9 +9,9 @@ clean_whitespace        = false
 convert_quotes          = nil
 convert_control_parens  = nil
 
-while(ARGV.length > 0)
+while ARGV.length > 0
   term = ARGV.shift
-  if(term == '-?' || term == '--help')
+  if term == '-?' || term == '--help'
     show_help = true
     ARGV.clear
   elsif(term =~ /\A--/)
@@ -41,18 +41,18 @@ if((fname.nil? && outname.nil?) || show_help)
   [--prefer-single-quotes|--prefer-double-quotes]
   [--prefer-bare-controls|--prefer-wrapped-controls]"
   puts
-  puts "    <infile> - File to read.  Specify `-` to read STDIN."
-  puts "               Note that <outfile> is ignored when reading from STDIN."
-  puts "    <outfile> - File to write.  Defaults to <infile>."
+  puts '    <infile> - File to read.  Specify `-` to read STDIN.'
+  puts '               Note that <outfile> is ignored when reading from STDIN.'
+  puts '    <outfile> - File to write.  Defaults to <infile>.'
   puts
-  puts "    --clean-whitespace            Trim trailing whitespace from ends of lines"
-  puts "    --prefer-single-quotes        Where possible, coerce string literals to"
-  puts "                                  be single-quoted."
-  puts "    --prefer-double-quotes        Coerce string literals to be double-quoted."
-  puts "    --prefer-bare-controls        Remove parens on control-flow statements."
-  puts "                                  (PARTIALLY IMPLEMENTED.)"
-  puts "    --prefer-wrapped-controls     Add parens to control-flow statements if"
-  puts "                                  absent.  (UNIMPLEMENTED.)"
+  puts '    --clean-whitespace            Trim trailing whitespace from ends of lines'
+  puts '    --prefer-single-quotes        Where possible, coerce string literals to'
+  puts '                                  be single-quoted.'
+  puts '    --prefer-double-quotes        Coerce string literals to be double-quoted.'
+  puts '    --prefer-bare-controls        Remove parens on control-flow statements.'
+  puts '                                  (PARTIALLY IMPLEMENTED.)'
+  puts '    --prefer-wrapped-controls     Add parens to control-flow statements if'
+  puts '                                  absent.  (UNIMPLEMENTED.)'
   exit 1
 end
 
@@ -61,14 +61,14 @@ raise "No such file '#{fname}'!" unless(File.exist?(fname) || fname == '-')
 outname = fname unless outname && outname != ''
 
 filters = []
-if(clean_whitespace)
+if clean_whitespace
   filters += [
     Normalize::Filters::WhitespaceFilters::STRIP_TRAILING_WHITESPACE_FROM_STATEMENTS,
     Normalize::Filters::WhitespaceFilters::STRIP_TRAILING_WHITESPACE_FROM_COMMENTS,
   ]
 end
 
-if(convert_quotes == :single)
+if convert_quotes == :single
   filters += [
     Normalize::Filters::StringFilters::ALWAYS_SINGLE_QUOTED_EMPTY,
     Normalize::Filters::StringFilters::PREFER_SINGLE_QUOTED_NONEMPTY,
@@ -79,12 +79,12 @@ elsif(convert_quotes == :double)
     Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_NONEMPTY,
   ]
 end
-if(convert_control_parens == :bare)
+if convert_control_parens == :bare
   filters += [
     Normalize::Filters::KeywordFilters::PREFER_NO_PARENS_ON_CONTROL_KEYWORDS,
   ]
 elsif(convert_control_parens == :wrapped)
-  raise "Sorry, --prefer-wrapped-controls is not implemented yet!"
+  raise 'Sorry, --prefer-wrapped-controls is not implemented yet!'
 end
 
 processor = Normalize::Processor.new(*filters)
@@ -104,7 +104,7 @@ result = processor.
   map(&:token).
   join
 
-if(clean_whitespace)
+if clean_whitespace
   # Ensure exactly one trailing newline:
   #
   # TODO: We should do newline normalization as part of whitespace-related
