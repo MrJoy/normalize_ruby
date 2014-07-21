@@ -4,9 +4,9 @@ require_relative '../lib/normalize'
 
 fname = ARGV.shift
 outname = ARGV.shift
-raise 'Must specify filename!' unless(fname && fname != '' && fname != '-')
+raise 'Must specify filename!' unless(fname && fname != '' || fname == '-')
 raise "No such file '#{fname}'!" unless(File.exist?(fname) || fname == '-')
-outname = fname unless(outname && outname != '' && fname != '-')
+outname = fname unless(outname && outname != '')
 
 processor = Normalize::Processor.new(
   Normalize::Filters::StringFilters::ALWAYS_SINGLE_QUOTED_EMPTY,
