@@ -5,7 +5,7 @@ require_relative '../lib/normalize'
 show_help               = false
 fname                   = nil
 outname                 = nil
-trim_whitespace         = false
+clean_whitespace        = false
 convert_quotes          = nil
 convert_control_parens  = nil
 
@@ -16,8 +16,8 @@ while(ARGV.length > 0)
     ARGV.clear
   elsif(term =~ /\A--/)
     case term
-    when '--trim-whitespace'
-      trim_whitespace = true
+    when '--clean-whitespace'
+      clean_whitespace = true
     when '--prefer-single-quotes'
       convert_quotes = :single
     when '--prefer-double-quotes'
@@ -37,7 +37,7 @@ while(ARGV.length > 0)
 end
 
 if((fname.nil? && outname.nil?) || show_help)
-  puts "Usage: normalize_ruby <infile> [<outfile>] [--trim-whitespace]
+  puts "Usage: normalize_ruby <infile> [<outfile>] [--clean-whitespace]
   [--prefer-single-quotes|--prefer-double-quotes]
   [--prefer-bare-controls|--prefer-wrapped-controls]"
   puts
@@ -45,6 +45,7 @@ if((fname.nil? && outname.nil?) || show_help)
   puts "               Note that <outfile> is ignored when reading from STDIN."
   puts "    <outfile> - File to write.  Defaults to <infile>."
   puts
+  puts "    --clean-whitespace            Trim trailing whitespace from ends of lines"
   puts "    --prefer-single-quotes        Where possible, coerce string literals to"
   puts "                                  be single-quoted."
   puts "    --prefer-double-quotes        Coerce string literals to be double-quoted."
@@ -60,7 +61,7 @@ raise "No such file '#{fname}'!" unless(File.exist?(fname) || fname == '-')
 outname = fname unless outname && outname != ''
 
 filters = []
-if(trim_whitespace)
+if(clean_whitespace)
   filters += [
     Normalize::Filters::WhitespaceFilters::STRIP_TRAILING_WHITESPACE_FROM_STATEMENTS,
     Normalize::Filters::WhitespaceFilters::STRIP_TRAILING_WHITESPACE_FROM_COMMENTS,
@@ -103,7 +104,7 @@ result = processor.
   map(&:token).
   join
 
-if(trim_whitespace)
+if(clean_whitespace)
   # Ensure exactly one trailing newline:
   #
   # TODO: We should do newline normalization as part of whitespace-related
