@@ -81,14 +81,14 @@ module Normalize
             # We have a match!
             state += 1
 
-            if token.kind == :on_tstring_content
-              # Now, make sure the string is one we want to muck with!
+            # Now, make sure the string is one we want to muck with!
 
-              # Specifically, we don't want to have to escape...
-              return [state, false] if token.token =~ /'/        # ...single-quotes.
-              return [state, false] if token.token =~ /\n/       # ...newlines.
-              return [state, false] if token.token =~ /\\[^"#]/  # ...various escapes.
-            end
+            # Specifically, we don't want to have to escape:
+            # * Single-quotes.
+            # * Newlines.
+            # * Various meta-characters.
+            return [state, false] if token.kind == :on_tstring_content &&
+                                     token.token =~ /'|\n|\\[^"#]/
 
             return [state, true]
           elsif state != 3

@@ -36,26 +36,19 @@ module Normalize
           # TODO: Rewrite these fucking state machines as generators. >.<
           case state
           when 0
-            if Constants::CONTROL_KEYWORDS.include?(token)
-              state += 1
-              return [state, true]
-            end
+            return [state + 1, true] if Constants::CONTROL_KEYWORDS.include?(token)
 
             return [state, false]
           when 1
-            return [state, true] if Constants::SPACE == token
-            if Constants::LPAREN == token
-              state += 1
-              return [state, true]
-            end
+            return [state,     true] if Constants::SPACE == token
+            return [state + 1, true] if Constants::LPAREN == token
 
             return [state, false]
           when 2
             return [state, true] if Constants::SPACE == token ||
                                     Constants::RPAREN != token
 
-            state += 1
-            return [state, true]
+            return [state + 1, true]
           when 3
             return [state, true] if Constants::SPACE == token
 
