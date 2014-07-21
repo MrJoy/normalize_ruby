@@ -18,3 +18,4 @@ foo GVAR bar
 foo IVAR bar
 foo CCVAR bar
 foo8bar
+foo@bar
