@@ -43,6 +43,36 @@ describe Normalize::Filters::StringFilters do
     end
   end
 
+  describe "ALWAYS_SINGLE_QUOTED_EMPTY" do
+    subject { super()::ALWAYS_SINGLE_QUOTED_EMPTY.apply(example, 0) }
+
+    let(:expected) { tokens_for_string_literal("'", nil) }
+
+    context "a double-quoted empty string" do
+      let(:example)  { tokens_for_string_literal('"', nil) }
+
+      it "should match" do
+        expect(status).to be true
+      end
+
+      it "should be modified into a single-quoted empty string" do
+        expect(output).to match expected
+      end
+    end
+
+    context "a single-quoted empty string" do
+      let(:example)  { expected.dup }
+
+      it "should not match" do
+        expect(status).to be false
+      end
+
+      it "should not be modified" do
+        expect(output).to match expected
+      end
+    end
+  end
+
   describe "ALWAYS_DOUBLE_QUOTED_NONEMPTY" do
     subject { super()::ALWAYS_DOUBLE_QUOTED_NONEMPTY.apply(example, 0) }
 

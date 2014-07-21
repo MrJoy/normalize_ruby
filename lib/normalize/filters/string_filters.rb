@@ -92,14 +92,26 @@ module Normalize
               # Now, make sure the string is one we want to muck with!
 
               return false if token.token =~ /'/ # We don't want to escape single-quotes...
-              return false if token.token =~ /#[#\{]/ # We don't want to mess up interpolation.
               if token.token =~ /\\/
                 # Uh-oh!  We have escaping.  Don't want to muck with this
                 # string unless the ONLY form of escaping is `\"`!
+                is_ok = true
+                offset = 0
+                while offset = token.token.index('\\', offset + 1) && offset < (token.token.length + 1)
+                  escaped_char = token.token[offset + 1]
+                  if escaped_char != '"'
+                    is_ok = false
+                    break
+                  end
+                end
+                return is_ok
               end
             end
 
             return true
+          elsif @state != 3
+            # Got an unexpected token!
+            return false
           end
 
           # No match.
