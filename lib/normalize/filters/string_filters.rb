@@ -90,8 +90,10 @@ module Normalize
             if token.kind == :on_tstring_content
               # Now, make sure the string is one we want to muck with!
 
-              return false if token.token =~ /'/ # We don't want to escape single-quotes.
-              return false if token.token =~ /\n/ # We don't want to escape newlines.
+              # Specifically, we don't want to have to escape...
+              return false if token.token =~ /'/ # ...single-quotes.
+              return false if token.token =~ /\n/ # ...newlines.
+              return false if token.token =~ /#[#\{\$@]/ # ...interpolation.
 
               if token.token =~ /\\/
                 # Uh-oh!  We have escaping.  Don't want to muck with this
