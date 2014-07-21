@@ -64,9 +64,9 @@ module Normalize
           tokens[0].token = '"'
           tokens[1].token = tokens[1].
             token.
-            gsub(/\\'/, "'").
-            inspect.
-            gsub(/(\A")|("\z)/, '')
+            split(/\n/).
+            map { |line| line.inspect.gsub(/(\A")|("\z)/, '') }.
+            join("\n")
           tokens[2].token = '"'
 
           tokens
