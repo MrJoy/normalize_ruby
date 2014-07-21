@@ -32,5 +32,9 @@ module Normalize
 
       return result
     end
+
+    def map(&block)
+      return @l.map(&block) + @r.map(&block)
+    end
   end
 end
