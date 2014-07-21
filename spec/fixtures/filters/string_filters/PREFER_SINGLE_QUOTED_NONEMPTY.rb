@@ -18,6 +18,10 @@ module Dummy
   bar"
   puts 'foo
   bar'
+  puts "foo
+"
+  puts 'foo
+'
   puts "foo #{1 + 1} bar"
   puts "foo #$gvar bar"
   puts "foo #@ivar bar"
