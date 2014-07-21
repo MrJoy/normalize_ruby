@@ -21,13 +21,22 @@ module Normalize
         end
       elsif idx.kind_of?(Range)
         # TODO: Replace this with a slicing array proxy...
-        head = idx.first
-        tail = idx.last
-        tail = @length + tail if tail < 0
-        result = Array.new(tail - head)
-        (head..tail).each do |i|
-          result[i - head] = self[i]
-        end
+        head    = idx.first
+        head    = @length + head if head < 0
+        tail    = idx.last
+        tail    = @length + tail if tail < 0
+        return nil if head > @length
+
+        divider = tail
+        divider = @cutoff - 1 if divider >= @cutoff
+        ll = (head <= divider) ? @l[head..divider] : []
+
+        head    = (@cutoff < head) ? head - @cutoff : 0
+        tail    = tail - @cutoff
+        rr = (tail >= head) ? @r[head..tail] : nil
+
+        result = ll
+        result = rr ? result + rr : result
       end
 
       return result
