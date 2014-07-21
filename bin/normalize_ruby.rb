@@ -29,6 +29,9 @@ result = processor.
   map(&:token).
   join.
   # Ensure exactly one trailing newline:
+  #
+  # TODO: We should do newline normalization as part of whitespace-related
+  # TODO: rules, and allow configurability.
   rstrip + "\n"
 
 if fname == '-'
