@@ -73,9 +73,11 @@ module Normalize
       return [false, tokens] if match_length == -1
 
       last_index = (match_length + index) - 1
-      tokens[index..last_index] = @action.call(tokens[index..last_index])
+      replacement = @action.call(tokens[index..last_index])
+      result = (replacement != tokens[index..last_index])
+      tokens[index..last_index] = replacement if result
 
-      return [true, tokens]
+      return [result, tokens]
     end
   end
 end
