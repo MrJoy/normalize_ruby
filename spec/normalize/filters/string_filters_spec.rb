@@ -29,6 +29,10 @@ describe Normalize::Filters::StringFilters do
     end
   end
 
+  describe '::ALWAYS_DOUBLE_QUOTED_EMPTY' do
+    let(:fixture) { :ALWAYS_DOUBLE_QUOTED_EMPTY }
+    include_examples 'string filter examples'
+  end
 
   describe '::ALWAYS_SINGLE_QUOTED_EMPTY' do
     let(:fixture) { :ALWAYS_SINGLE_QUOTED_EMPTY }
