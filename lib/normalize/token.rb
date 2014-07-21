@@ -92,12 +92,26 @@ module Normalize
 
       raise "Can't compare Token to #{other.inspect}!" unless(other.is_a?(Token))
 
-      line_matches  = @skip_line  || other.skip_line  || (@line   == other.line)
-      col_matches   = @skip_col   || other.skip_col   || (@col    == other.col)
-      kind_matches  = @skip_kind  || other.skip_kind  || (@kind   == other.kind)
-      token_matches = @skip_token || other.skip_token || (@token  == other.token)
+      line_matches  = @skip_line  || other.skip_line  || compare(@line, other.line)
+      col_matches   = @skip_col   || other.skip_col   || compare(@col, other.col)
+      kind_matches  = @skip_kind  || other.skip_kind  || compare(@kind, other.kind)
+      token_matches = @skip_token || other.skip_token || compare(@token, other.token)
 
       return line_matches && col_matches && kind_matches && token_matches
+    end
+
+    protected
+
+    def compare(expected, actual)
+      if(expected.kind_of?(Regexp))
+        result = !!(expected =~ actual)
+      elsif(expected.kind_of?(Array))
+        result = expected.include?(actual)
+      else
+        result = (expected == actual)
+      end
+
+      return result
     end
   end
 end
