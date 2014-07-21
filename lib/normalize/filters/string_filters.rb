@@ -93,6 +93,10 @@ module Normalize
 
               return false if token.token =~ /'/ # We don't want to escape single-quotes...
               return false if token.token =~ /#[#\{]/ # We don't want to mess up interpolation.
+              if token.token =~ /\\/
+                # Uh-oh!  We have escaping.  Don't want to muck with this
+                # string unless the ONLY form of escaping is `\"`!
+              end
             end
 
             return true
