@@ -1,4 +1,5 @@
 require_relative './token'
+require_relative './concatenated_array'
 
 module Normalize
   class Pattern
@@ -71,8 +72,9 @@ module Normalize
       replacement = @action.call(tokens[index..last_index])
       prefix = (index > 0) ? tokens[0..(index-1)] : []
       suffix = (last_index < tokens.length) ? tokens[(last_index+1)..-1] : []
+      result = ConcatenatedArray.new(ConcatenatedArray.new(prefix, replacement), suffix)
 
-      return [true, prefix + replacement + suffix]
+      return [true, result]
     end
   end
 end
