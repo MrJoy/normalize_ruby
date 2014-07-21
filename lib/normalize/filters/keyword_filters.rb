@@ -32,13 +32,11 @@ module Normalize
 
           # CONTROL_KW = 'if' | 'unless' | 'while'
 
-          # CONTROL_KW \s* '(' \s* (.*?) \s* ')' \s* \n
+          # CONTROL_KW \s* '(' \s* (.*?) \s* ')' \s* (a:\n | b:COMMENT)
           #   =>
-          # \1 ' ' \2 \n
+          # \1 ' ' \2 (a:\n | b: ' ' \3)
 
-          # CONTROL_KW \s* '(' \s* (.*?) \s* ')' \s* (COMMENT)
-          #   =>
-          # \1 ' ' \2 ' ' \3
+          # TODO: Rewrite these fucking state machines as generators. >.<
           case @state
           when 0
             if Constants::CONTROL_KEYWORDS.include?(token)
