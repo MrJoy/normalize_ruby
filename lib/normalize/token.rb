@@ -59,14 +59,14 @@ module Normalize
       return "Normalize::Token[#{to_h.inspect}]"
     end
 
+    def ignore_position
+      @skip_line = true
+      @skip_col = true
+
+      return self
+    end
+
     if defined?(RSPEC_RUNNING)
-      def ignore_position
-        @skip_line = true
-        @skip_col = true
-
-        return self
-      end
-
       def inspect
         return to_s
       end
