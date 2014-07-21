@@ -17,5 +17,5 @@ tokens = processor.parse(File.read(fname), fname)
 tokens = processor.process(tokens)
 
 File.open(outname, "w") do |fh|
-  fh.write(tokens.map { |token| token[:token] }.join)
+  fh.write(tokens.map { |token| token.token }.join)
 end
