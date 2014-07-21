@@ -45,4 +45,6 @@ module Dummy
   puts "\'"
   puts "\""
   puts "\\"
+  puts "\\"
+  puts "\\1"
 end
