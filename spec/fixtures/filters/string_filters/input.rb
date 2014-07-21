@@ -16,12 +16,15 @@ module Dummy
   puts "foo\nbar"
   puts "foo
   bar"
+  puts 'foo
+  bar'
   puts "foo #{1 + 1} bar"
   puts "foo #$gvar bar"
   puts "foo #@ivar bar"
   puts "foo #@@cvar bar"
   puts "foo\070bar"
   puts "foo\x40bar"
+  puts '\n'
   puts "\n"
   puts "\r"
   puts "\f"
