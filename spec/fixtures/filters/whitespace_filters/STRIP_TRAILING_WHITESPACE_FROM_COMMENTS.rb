@@ -1,10 +1,10 @@
 def foo # meh.
-
-end
+       
+end     
     # wheeeeee
-
+             
 
     # wheeeeeeeeeeeeeee
 
-puts "meh
+puts "meh            
 bleah"
