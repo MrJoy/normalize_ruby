@@ -34,4 +34,4 @@ puts "\M-\C-m"
 puts "\q"
 puts "\'"
 puts '"'
-puts '\\'
+puts "\\"

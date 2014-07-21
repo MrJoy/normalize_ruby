@@ -91,9 +91,9 @@ module Normalize
               # Now, make sure the string is one we want to muck with!
 
               # Specifically, we don't want to have to escape...
-              return false if token.token =~ /'/          # ...single-quotes.
-              return false if token.token =~ /\n/         # ...newlines.
-              return false if token.token =~ /\\[^"#\\]/  # ...various escapes.
+              return false if token.token =~ /'/        # ...single-quotes.
+              return false if token.token =~ /\n/       # ...newlines.
+              return false if token.token =~ /\\[^"#]/  # ...various escapes.
             end
 
             return true
