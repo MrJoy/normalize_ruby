@@ -48,4 +48,5 @@ module Dummy
   puts '\\'
   puts '\\1'
   puts '\\\\'
+  puts 'jQuery(\'#dialog_errors\').html'
 end
