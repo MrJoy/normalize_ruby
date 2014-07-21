@@ -1,2 +1,2 @@
-|foo|foo's bar|foo "bar" baz|foo #{hash and braces} bar|foo ## hash escape|foo #$gvar bar|foo #@ivar bar|foo #@@cvar bar|adjacent escaping \\\n maybe even a \\...|foo\nbar|foo
+|foo|foo's bar|foo "bar" baz|foo #{hash and braces} bar|foo ## hash escape|foo #$gvar bar|foo #@ivar bar|foo #@@cvar bar|adjacent escaping \\\n maybe|foo\nbar|foo
 bar
