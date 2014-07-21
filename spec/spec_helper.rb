@@ -52,6 +52,17 @@ RSpec.configure do |config|
     expectations.syntax = :expect
   end
 
+  def capture_stdout(&block)
+    original_stdout = $stdout
+    $stdout = fake = StringIO.new
+    begin
+      yield
+    ensure
+      $stdout = original_stdout
+    end
+    fake.string
+  end
+
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
 =begin
