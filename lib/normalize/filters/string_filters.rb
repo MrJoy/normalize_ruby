@@ -2,9 +2,6 @@
 # TODO: that are relevant...)
 
 # TODO: Rules for heredocs, and anything else that's relevant.
-
-# TODO: Parameterize this, or implement alternate behaviors, like
-# TODO: prefer-single-quote.
 require_relative '../filters'
 
 module Normalize
