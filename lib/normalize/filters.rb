@@ -68,9 +68,9 @@ module Normalize
       return [false, tokens] if(match_length == -1)
 
       last_index = (match_length + index) - 1
+      replacement = @action.call(tokens[index..last_index])
       prefix = (index > 0) ? tokens[0..(index-1)] : []
       suffix = (last_index < tokens.length) ? tokens[(last_index+1)..-1] : []
-      replacement = @action.call(tokens[index..last_index])
 
       return [true, prefix + replacement + suffix]
     end
