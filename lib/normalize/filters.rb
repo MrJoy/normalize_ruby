@@ -17,8 +17,8 @@ module Normalize
     def match?(tokens, index)
       is_match = true
       expectations.each_with_index do |expectation, offset|
-        is_match = false unless(expectation == tokens[index + offset])
-        break unless(is_match)
+        is_match = false unless expectation == tokens[index + offset]
+        break unless is_match
       end
 
       return is_match ? expectations.length : -1
@@ -65,7 +65,7 @@ module Normalize
 
     def apply(tokens, index = 0)
       match_length = @pattern.match?(tokens, index)
-      return [false, tokens] if(match_length == -1)
+      return [false, tokens] if match_length == -1
 
       last_index = (match_length + index) - 1
       tokens[index..last_index] = @action.call(tokens[index..last_index])

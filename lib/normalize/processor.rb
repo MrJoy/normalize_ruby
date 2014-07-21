@@ -19,12 +19,12 @@ module Normalize
 
     def process(tokens)
       filter_list = filters.to_a
-      raise 'Must specify at least one filter!' if(filter_list.length == 0)
+      raise 'Must specify at least one filter!' if filter_list.length == 0
       is_match = true
-      while(is_match)
+      while is_match
         idx = 0
         is_match = true
-        while(idx < tokens.length)
+        while idx < tokens.length
           filters.each do |filter|
             (is_match, tokens) = filter.apply(tokens, idx)
           end

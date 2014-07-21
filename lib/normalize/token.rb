@@ -4,7 +4,7 @@ module Normalize
     attr_reader :skip_line, :skip_col, :skip_kind, :skip_token
 
     def initialize(*args)
-      if(args.length == 4)
+      if args.length == 4
         (@line, @col, @kind, @token) = *args
         @skip_line = @skip_col = @skip_kind = @skip_token = false
       elsif(args.length == 1 && args[0].is_a?(Hash))
@@ -48,10 +48,10 @@ module Normalize
 
     def to_h
       result = {}
-      result[:line]   = @line   unless(@skip_line)
-      result[:col]    = @col    unless(@skip_col)
-      result[:kind]   = @kind   unless(@skip_kind)
-      result[:token]  = @token  unless(@skip_token)
+      result[:line]   = @line   unless @skip_line
+      result[:col]    = @col    unless @skip_col
+      result[:kind]   = @kind   unless @skip_kind
+      result[:token]  = @token  unless @skip_token
       return result
     end
 
