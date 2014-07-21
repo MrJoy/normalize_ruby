@@ -59,6 +59,12 @@ module Normalize
       return "Normalize::Token[#{to_h.inspect}]"
     end
 
+    if defined?(RSPEC_RUNNING)
+      def inspect
+        return to_s
+      end
+    end
+
     def dup
       return Token.new(to_h)
     end
