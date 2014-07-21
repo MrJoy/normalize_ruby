@@ -39,11 +39,10 @@ module Normalize
 
     def match?(tokens, index)
       is_match = false
-      rule.call(nil) # Reset state...
-
       offset = 0
+      state = nil
       while !offset.nil?
-        token_matches = rule.call(tokens[index + offset])
+        (state, token_matches) = rule.call(state, tokens[index + offset])
         if token_matches
           # Looks like we have a match in progress...
           is_match = true

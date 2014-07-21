@@ -74,33 +74,30 @@ module Normalize
       #               escape sequences, or interpolation.
       # REPLACEMENT:  Equivalent single-quoted-string
       PREFER_SINGLE_QUOTED_NONEMPTY = Filter.new(
-        ArbitraryPattern.new(lambda { |token|
-          unless token
-            @state = 0
-            return
-          end
+        ArbitraryPattern.new(lambda { |state, token|
+          state ||= 0
 
-          if Constants::DOUBLE_QUOTED_STRING_LITERAL[@state] == token
+          if Constants::DOUBLE_QUOTED_STRING_LITERAL[state] == token
             # We have a match!
-            @state += 1
+            state += 1
 
             if token.kind == :on_tstring_content
               # Now, make sure the string is one we want to muck with!
 
               # Specifically, we don't want to have to escape...
-              return false if token.token =~ /'/        # ...single-quotes.
-              return false if token.token =~ /\n/       # ...newlines.
-              return false if token.token =~ /\\[^"#]/  # ...various escapes.
+              return [state, false] if token.token =~ /'/        # ...single-quotes.
+              return [state, false] if token.token =~ /\n/       # ...newlines.
+              return [state, false] if token.token =~ /\\[^"#]/  # ...various escapes.
             end
 
-            return true
-          elsif @state != 3
+            return [state, true]
+          elsif state != 3
             # Got an unexpected token!
-            return false
+            return [state, false]
           end
 
           # No match.
-          return nil
+          return [state, nil]
         }),
         proc do |tokens|
           tokens[0] = tokens[0].dup

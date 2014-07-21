@@ -24,11 +24,8 @@ module Normalize
       #               expression.
       # REPLACEMENT:  Equivalent statement without parens.
       PREFER_NO_PARENS_ON_CONTROL_KEYWORDS = Filter.new(
-        ArbitraryPattern.new(lambda { |token|
-          unless token
-            @state = 0
-            return
-          end
+        ArbitraryPattern.new(lambda { |state, token|
+          state ||= 0
 
           # CONTROL_KW = 'if' | 'unless' | 'while'
 
@@ -37,39 +34,39 @@ module Normalize
           # \1 ' ' \2 (a:\n | b: ' ' \3)
 
           # TODO: Rewrite these fucking state machines as generators. >.<
-          case @state
+          case state
           when 0
             if Constants::CONTROL_KEYWORDS.include?(token)
-              @state += 1
-              return true
+              state += 1
+              return [state, true]
             end
 
-            return false
+            return [state, false]
           when 1
-            return true if Constants::SPACE == token
+            return [state, true] if Constants::SPACE == token
             if Constants::LPAREN == token
-              @state += 1
-              return true
+              state += 1
+              return [state, true]
             end
 
-            return false
+            return [state, false]
           when 2
-            return true if Constants::SPACE == token ||
-                           Constants::RPAREN != token
+            return [state, true] if Constants::SPACE == token ||
+                                    Constants::RPAREN != token
 
-            @state += 1
-            return true
+            state += 1
+            return [state, true]
           when 3
-            return true if Constants::SPACE == token
+            return [state, true] if Constants::SPACE == token
 
             # Done!
-            return nil if Constants::STATEMENT_TERMINATORS.include?(token)
+            return [state, nil] if Constants::STATEMENT_TERMINATORS.include?(token)
 
-            return false
+            return [state, false]
           end
 
           # No match.
-          raise "This shouldn't have been possible! @state == #{@state}"
+          raise "This shouldn't have been possible! state == #{state}"
         }),
         proc do |tokens|
           output = [tokens.shift.dup]
