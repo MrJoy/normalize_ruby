@@ -59,9 +59,16 @@ module Normalize
       return "Normalize::Token[#{to_h.inspect}]"
     end
 
+    TOKENS_WHOSE_CONTENT_WE_CAN_IGNORE = [
+      :on_lparen, :on_rparen, :on_lbrace, :on_rbrace, :on_sp, :on_nl,
+      :on_ignored_nl,
+    ]
     def ignore_position
       @skip_line = true
       @skip_col = true
+      if TOKENS_WHOSE_CONTENT_WE_CAN_IGNORE.include?(@kind)
+        @skip_token = true
+      end
 
       return self
     end
