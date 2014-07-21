@@ -47,4 +47,5 @@ module Dummy
   puts "\\"
   puts "\\"
   puts "\\1"
+  puts "\\\\"
 end
