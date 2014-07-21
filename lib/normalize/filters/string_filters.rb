@@ -91,7 +91,9 @@ module Normalize
             if token.kind == :on_tstring_content
               # Now, make sure the string is one we want to muck with!
 
-              return false if token.token =~ /'/ # We don't want to escape single-quotes...
+              return false if token.token =~ /'/ # We don't want to escape single-quotes.
+              return false if token.token =~ /\n/ # We don't want to escape newlines.
+
               if token.token =~ /\\/
                 # Uh-oh!  We have escaping.  Don't want to muck with this
                 # string unless the ONLY form of escaping is `\"`!
@@ -123,7 +125,8 @@ module Normalize
           tokens[2] = tokens[2].dup
 
           tokens[0].token = "'"
-          tokens[1].token = tokens[1].token
+          tokens[1].token = tokens[1].token.
+            gsub(/\\"/, '"')
           tokens[2].token = "'"
 
           tokens

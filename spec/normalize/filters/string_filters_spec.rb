@@ -313,12 +313,12 @@ describe Normalize::Filters::StringFilters do
         # 'foo\'s bar'
         let(:example)  { tokens_for_string_literal("'", "foo\\'s bar") }
 
-        it "should match" do
-          expect(status).to be true
+        it "should not match" do
+          expect(status).to be false
         end
 
-        it "should be modified into " do
-          expect(output).to match expected
+        it "should not be modified" do
+          expect(output).to match example
         end
       end
 
@@ -344,12 +344,12 @@ describe Normalize::Filters::StringFilters do
         # bar'
         let(:example)  { tokens_for_string_literal("'", "foo\nbar") }
 
-        it "should match" do
-          expect(status).to be true
+        it "should not match" do
+          expect(status).to be false
         end
 
-        it "should be modified into a double-quoted string" do
-          expect(output).to match expected
+        it "should not be modified" do
+          expect(output).to match example
         end
       end
 
@@ -363,7 +363,7 @@ describe Normalize::Filters::StringFilters do
         end
 
         it "should not be modified" do
-          expect(output).to match expected
+          expect(output).to match example
         end
       end
     end
