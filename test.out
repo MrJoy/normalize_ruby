@@ -17,3 +17,4 @@ foo 2 bar
 foo GVAR bar
 foo IVAR bar
 foo CCVAR bar
+foo8bar
