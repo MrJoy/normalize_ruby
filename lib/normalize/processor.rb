@@ -19,7 +19,7 @@ module Normalize
 
     def process(tokens)
       filter_list = filters.to_a
-      raise "Must specify at least one filter!" if(filter_list.length == 0)
+      raise 'Must specify at least one filter!' if(filter_list.length == 0)
       is_match = true
       while(is_match)
         idx = 0

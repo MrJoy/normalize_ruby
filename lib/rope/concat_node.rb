@@ -69,7 +69,7 @@ module Rope
     # Rebalances this tree
     def rebalance!
       # TODO
-      raise "Unimplemented!"
+      raise 'Unimplemented!'
     end
 
     # Returns a node that represents a slice of this tree

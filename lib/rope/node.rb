@@ -22,7 +22,7 @@ module Rope
 
     # Rebalances this tree
     def rebalance!
-      raise "Unimplemented!"
+      raise 'Unimplemented!'
     end
   end
 end
