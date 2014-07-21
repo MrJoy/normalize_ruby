@@ -37,7 +37,11 @@ result = processor.
 if fname == '-'
   puts result
 else
-  File.open(outname, 'w') do |fh|
-    fh.write(result)
+  # Only muddle with the file if we actually changed something, otherwise
+  # leave mtime et al alone.
+  if result != contents
+    File.open(outname, 'w') do |fh|
+      fh.write(result)
+    end
   end
 end
