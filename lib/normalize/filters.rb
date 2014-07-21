@@ -1,4 +1,3 @@
-# TODO: Rule for "if" \s* "(" \s* (.+) \s* ")" => "if \1"
 require_relative './token'
 
 module Normalize
