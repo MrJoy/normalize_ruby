@@ -101,12 +101,15 @@ result = processor.
   process(tokens).
   # Reconstitute source:
   map(&:token).
-  join.
+  join
+
+if(trim_whitespace)
   # Ensure exactly one trailing newline:
   #
   # TODO: We should do newline normalization as part of whitespace-related
   # TODO: rules, and allow configurability.
-  rstrip + "\n"
+  result = result.rstrip + "\n"
+end
 
 if fname == '-'
   puts result
