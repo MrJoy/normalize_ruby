@@ -1,7 +1,7 @@
 if(foo)
 end
 
-if ( foo ) # meh
+if     ( foo ) # meh
 end
 
 if foo
