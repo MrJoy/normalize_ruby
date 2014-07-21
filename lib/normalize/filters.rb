@@ -64,7 +64,7 @@ module Normalize
       @action = act
     end
 
-    def apply(tokens, index)
+    def apply(tokens, index = 0)
       match_length = @pattern.match?(tokens, index)
       return [false, tokens] if(match_length == -1)
 
