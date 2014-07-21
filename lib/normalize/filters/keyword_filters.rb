@@ -6,7 +6,8 @@ module Normalize
       module Constants
       end
 
-      # MATCH:        Control keywords with parens wrapping the control expression.
+      # MATCH:        Control keywords with parens wrapping the control
+      #               expression.
       # REPLACEMENT:  Equivalent statement without parens.
       PREFER_NO_PARENS_ON_CONTROL_KEYWORDS = Filter.new(
         ArbitraryPattern.new(lambda { |token|
