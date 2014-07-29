@@ -1,16 +1,23 @@
 class Undo < Parser::Rewriter
-  def on_while(node)
-    remove_delimiter(node, 'do')
-    super
-  end
+  # def on_while(node)
+  #   remove_delimiter(node, 'do')
+  #   super
+  # end
 
-  def on_until(node)
-    remove_delimiter(node, 'do')
-    super
-  end
+  # def on_until(node)
+  #   remove_delimiter(node, 'do')
+  #   super
+  # end
 
   def on_if(node)
-    remove_delimiter(node, 'then')
+    # remove_delimiter(node, 'then')
+    begin
+      if(node.children[0].loc.begin)
+        replace node.children[0].loc.begin, ' '
+        remove node.children[0].loc.end
+      end
+    rescue
+    end
     super
   end
 
