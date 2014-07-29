@@ -31,19 +31,19 @@ class BareControlStatements < Parser::Rewriter
 
   def cleanse_control_statement(node)
     begin
-      if(node.children[0].type == :begin)
+      if node.children[0].type == :begin
         word_length           = node.loc.keyword.source.length
         word_starts_at        = node.loc.keyword.begin_pos
         condition_starts_at   = node.children[0].loc.begin.begin_pos
         effective_word_length = condition_starts_at - word_starts_at
 
-        if(effective_word_length == word_length)
+        if effective_word_length == word_length
           # No space, so we need to add one!
           replace node.children[0].loc.begin, ' '
         else
           # Already have some whitespace, so... yeah.
           excess_gap_size = (effective_word_length - word_length) - 1
-          if(excess_gap_size > 0)
+          if excess_gap_size > 0
             # GAH!  TOO MUCH WHITESPACE!
             buffer    = node.children[0].loc.begin.source_buffer
             begin_pos = node.children[0].loc.begin.begin_pos - excess_gap_size
