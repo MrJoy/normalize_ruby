@@ -63,7 +63,7 @@ module Normalize
         }),
         proc do |tokens|
           output = [tokens.shift.dup]
-          state = 0
+          state  = 0
           while tokens.length > 0
             token = tokens.shift
             case state

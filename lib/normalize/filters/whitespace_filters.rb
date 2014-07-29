@@ -37,7 +37,7 @@ module Normalize
         ]),
         proc do |tokens|
           output = [tokens.shift.dup]
-          term = output[0].token.match(/(\r?\n)\z/)[1]
+          term   = output[0].token.match(/(\r?\n)\z/)[1]
           output[0].token = output[0].token.rstrip + term
           output
         end

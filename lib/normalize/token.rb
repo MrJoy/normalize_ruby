@@ -65,7 +65,7 @@ module Normalize
     ]
     def ignore_position
       @skip_line = true
-      @skip_col = true
+      @skip_col  = true
       if TOKENS_WHOSE_CONTENT_WE_CAN_IGNORE.include?(@kind)
         @skip_token = true
       end

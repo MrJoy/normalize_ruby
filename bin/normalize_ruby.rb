@@ -90,10 +90,10 @@ end
 processor = Normalize::Processor.new(*filters)
 
 if fname == '-'
-  contents = STDIN.read
+  contents        = STDIN.read
   effective_fname = '<stdin>'
 else
-  contents = File.read(fname)
+  contents        = File.read(fname)
   effective_fname = fname
 end
 result = processor.

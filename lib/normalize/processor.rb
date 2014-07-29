@@ -33,7 +33,7 @@ module Normalize
     def initialize(*args)
       @filters = Array(args)
       @builder = AST::Builder.new
-      @parser = Parser::CurrentRuby.new(@builder)
+      @parser  = Parser::CurrentRuby.new(@builder)
       @parser.diagnostics.consumer = lambda do |diag|
         puts "DEBUG: #{diag.render}"
       end

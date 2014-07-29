@@ -39,8 +39,8 @@ module Normalize
 
     def match?(tokens, index)
       is_match = false
-      offset = 0
-      state = nil
+      offset   = 0
+      state    = nil
       while !offset.nil?
         (state, token_matches) = rule.call(state, tokens[index + offset])
         if token_matches
@@ -64,16 +64,16 @@ module Normalize
   class Filter
     def initialize(pat, act)
       @pattern = pat
-      @action = act
+      @action  = act
     end
 
     def apply(tokens, index = 0)
       match_length = @pattern.match?(tokens, index)
       return [false, tokens] if match_length == -1
 
-      last_index = (match_length + index) - 1
+      last_index  = (match_length + index) - 1
       replacement = @action.call(tokens[index..last_index])
-      result = (replacement != tokens[index..last_index])
+      result      = (replacement != tokens[index..last_index])
       tokens[index..last_index] = replacement if result
 
       return [result, tokens]
