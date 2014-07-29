@@ -18,6 +18,7 @@ source 'https://rubygems.org'
 
 gem 'parser', '>= 2.2.0.pre3'
 gem 'unparser'
+gem 'astrolabe'
 
 group :development do
   gem "rake"
