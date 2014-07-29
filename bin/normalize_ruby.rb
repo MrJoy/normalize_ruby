@@ -96,7 +96,10 @@ else
   contents = File.read(fname)
   effective_fname = fname
 end
-result = processor.unparse(processor.process(processor.parse(contents, effective_fname)))
+result = processor.
+  parse(contents, effective_fname).
+  process.
+  to_s
 
 if clean_whitespace
   # Ensure exactly one trailing newline:

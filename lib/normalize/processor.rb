@@ -40,17 +40,20 @@ module Normalize
     end
 
     def parse(src, fname)
-      buffer = Parser::Source::Buffer.new(fname)
-      buffer.source = src
+      @buffer = Parser::Source::Buffer.new(fname)
+      @buffer.source = src
 
-      return @parser.parse(buffer)
+      @ast, comments = @parser.parse_with_comments(@buffer)
+      @ast = Parser::Source::Comment.associate(@ast, comments)
+
+      return self
     ensure
       @parser.reset
     end
 
-    def process(ast)
+    def process
       filter_list = filters.to_a
-      return ast if filter_list.length == 0
+      return self if filter_list.length == 0
 
       # is_match = true
       # while is_match
@@ -64,11 +67,11 @@ module Normalize
       #   end
       # end
 
-      return ast
+      return self
     end
 
-    def unparse(ast)
-      return Unparser.unparse(ast)
+    def to_s
+      return @ast.source #Unparser.unparse(ast)
     end
   end
 end
