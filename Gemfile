@@ -16,6 +16,9 @@ source 'https://rubygems.org'
 #https://www.ruby-forum.com/topic/1012891
 #https://bugs.ruby-lang.org/issues/4365
 
+gem 'parser', '>= 2.2.0.pre3'
+gem 'unparser'
+
 group :development do
   gem "rake"
   gem "pry"
