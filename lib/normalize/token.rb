@@ -7,7 +7,7 @@ module Normalize
       if args.length == 4
         (@line, @col, @kind, @token) = *args
         @skip_line = @skip_col = @skip_kind = @skip_token = false
-      elsif(args.length == 1 && args[0].is_a?(Hash))
+      elsif args.length == 1 && args[0].is_a?(Hash)
         @line       = args[0][:line]
         @col        = args[0][:col]
         @kind       = args[0][:kind]
@@ -84,13 +84,13 @@ module Normalize
     end
 
     def ==(other)
-      if(other.is_a?(Hash))
+      if other.is_a?(Hash)
         other = Token[other]
-      elsif(other.is_a?(Array))
+      elsif other.is_a?(Array)
         other = Token[*other]
       end
 
-      raise "Can't compare Token to #{other.inspect}!" unless(other.is_a?(Token))
+      raise "Can't compare Token to #{other.inspect}!" unless other.is_a?(Token)
 
       line_matches  = @skip_line  || other.skip_line  || compare(@line, other.line)
       col_matches   = @skip_col   || other.skip_col   || compare(@col, other.col)
@@ -103,9 +103,9 @@ module Normalize
     protected
 
     def compare(expected, actual)
-      if(expected.kind_of?(Regexp))
+      if expected.kind_of?(Regexp)
         result = !!(expected =~ actual)
-      elsif(expected.kind_of?(Array))
+      elsif expected.kind_of?(Array)
         result = expected.include?(actual)
       else
         result = (expected == actual)

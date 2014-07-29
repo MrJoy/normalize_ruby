@@ -14,7 +14,7 @@ while ARGV.length > 0
   if term == '-?' || term == '--help'
     show_help = true
     ARGV.clear
-  elsif(term =~ /\A--/)
+  elsif term =~ /\A--/
     case term
     when '--clean-whitespace'
       clean_whitespace = true
@@ -27,16 +27,16 @@ while ARGV.length > 0
     when '--prefer-wrapped-controls'
       convert_control_parens = :wrapped
     end
-  elsif(fname.nil?)
+  elsif fname.nil?
     fname = term
-  elsif(outname.nil?)
+  elsif outname.nil?
     outname = term
   else
     raise "Got unexpected extra parameter: #{term}"
   end
 end
 
-if((fname.nil? && outname.nil?) || show_help)
+if (fname.nil? && outname.nil?) || show_help
   puts "Usage: normalize_ruby <infile> [<outfile>] [--clean-whitespace]
   [--prefer-single-quotes|--prefer-double-quotes]
   [--prefer-bare-controls|--prefer-wrapped-controls]"
@@ -57,7 +57,7 @@ if((fname.nil? && outname.nil?) || show_help)
 end
 
 raise 'Must specify filename!' unless fname && fname != '' || fname == '-'
-raise "No such file '#{fname}'!" unless(File.exist?(fname) || fname == '-')
+raise "No such file '#{fname}'!" unless File.exist?(fname) || fname == '-'
 outname = fname unless outname && outname != ''
 
 filters = []
@@ -73,7 +73,7 @@ if convert_quotes == :single
     Normalize::Filters::StringFilters::ALWAYS_SINGLE_QUOTED_EMPTY,
     Normalize::Filters::StringFilters::PREFER_SINGLE_QUOTED_NONEMPTY,
   ]
-elsif(convert_quotes == :double)
+elsif convert_quotes == :double
   filters += [
     Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_EMPTY,
     Normalize::Filters::StringFilters::ALWAYS_DOUBLE_QUOTED_NONEMPTY,
@@ -83,7 +83,7 @@ if convert_control_parens == :bare
   filters += [
     Normalize::Filters::KeywordFilters::PREFER_NO_PARENS_ON_CONTROL_KEYWORDS,
   ]
-elsif(convert_control_parens == :wrapped)
+elsif convert_control_parens == :wrapped
   raise 'Sorry, --prefer-wrapped-controls is not implemented yet!'
 end
 
