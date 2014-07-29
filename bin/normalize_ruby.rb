@@ -96,13 +96,7 @@ else
   contents = File.read(fname)
   effective_fname = fname
 end
-tokens = processor.parse(contents, effective_fname)
-result = processor.
-  # Apply rules
-  process(tokens).
-  # Reconstitute source:
-  map(&:token).
-  join
+result = processor.unparse(processor.process(processor.parse(contents, effective_fname)))
 
 if clean_whitespace
   # Ensure exactly one trailing newline:

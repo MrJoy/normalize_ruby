@@ -1,4 +1,5 @@
-require 'ripper'
+require 'parser'
+require 'unparser'
 require_relative './token'
 
 module Normalize
@@ -7,33 +8,42 @@ module Normalize
 
     def initialize(*args)
       @filters = Array(args)
+      @parser = Parser::CurrentRuby.new
+      @parser.diagnostics.consumer = lambda do |diag|
+        puts "DEBUG: #{diag.render}"
+      end
     end
 
     def parse(src, fname)
-      return Ripper.
-        lex(src, fname).
-        map do |((line_no, col_no), kind, token)|
-          Token.new(line_no, col_no, kind, token)
-        end
+      buffer = Parser::Source::Buffer.new(fname)
+      buffer.source = src
+
+      return @parser.parse(buffer)
+    ensure
+      @parser.reset
     end
 
-    def process(tokens)
+    def process(ast)
       filter_list = filters.to_a
-      return tokens if filter_list.length == 0
+      return ast if filter_list.length == 0
 
-      is_match = true
-      while is_match
-        idx = 0
-        is_match = true
-        while idx < tokens.length
-          filters.each do |filter|
-            (is_match, tokens) = filter.apply(tokens, idx)
-          end
-          idx += 1
-        end
-      end
+      # is_match = true
+      # while is_match
+      #   idx = 0
+      #   is_match = true
+      #   while idx < tokens.length
+      #     filters.each do |filter|
+      #       (is_match, tokens) = filter.apply(tokens, idx)
+      #     end
+      #     idx += 1
+      #   end
+      # end
 
-      return tokens
+      return ast
+    end
+
+    def unparse(ast)
+      return Unparser.unparse(ast)
     end
   end
 end
