@@ -18,7 +18,7 @@ module Normalize
       is_match = true
       expectations.each_with_index do |expectation, offset|
         if expectation.kind_of?(Array)
-          is_match = false unless expectation.include? tokens[index + offset]
+          is_match = false unless expectation.include?(tokens[index + offset])
         else
           is_match = false unless expectation == tokens[index + offset]
         end
