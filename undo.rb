@@ -15,8 +15,12 @@ class Undo < Parser::Rewriter
   end
 
   def remove_delimiter(node, delimiter)
-    if node.loc.begin && node.loc.begin.is?(delimiter)
-      remove node.loc.begin
+    begin
+      if node.loc.begin && node.loc.begin.is?(delimiter)
+        remove node.loc.begin
+      end
+    rescue
+      # Just ignore shit if things go wrong.
     end
   end
 end
