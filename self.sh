@@ -1,4 +1,5 @@
 #!/bin/bash
+IFS=$'\n\t'
 
 # find . -name "*.rb" |
 #   grep -v -E '^\./spec/fixtures' |

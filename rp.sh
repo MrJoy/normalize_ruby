@@ -1,4 +1,5 @@
 #!/bin/bash
+IFS=$'\n\t'
 
 #time (
 #  find ~/repairpal/RepairPal.com \( \
