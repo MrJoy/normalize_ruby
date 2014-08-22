@@ -1,12 +1,12 @@
 require 'pathname'
-require 'normalize/filters/keyword_filters'
-require 'normalize/processor'
+require 'normalize/filters/bare_control_statements'
+require 'normalize/runner'
 
-describe Normalize::Filters::KeywordFilters do
-  let(:klass)         { Normalize::Filters::KeywordFilters }
-  let(:fixtures)      { Pathname.new('spec/fixtures/filters/keyword_filters') }
+describe Normalize::Filters::BareControlStatements do
+  let(:klass)         { Normalize::Filters::BareControlStatements }
+  let(:fixtures)      { Pathname.new('spec/fixtures/filters/bare_control_statements') }
   let(:filter)        { klass.const_get(fixture) }
-  let(:processor)     { Normalize::Processor.new(filter) }
+  # let(:processor)     { Normalize::Processor.new(filter) }
 
   subject do
     tokens = processor.parse(input_ruby, '<...>')
