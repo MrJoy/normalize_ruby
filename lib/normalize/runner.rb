@@ -25,6 +25,62 @@ module Normalize
       raise
     end
 
+    # Temporarily overriding process until we can get a patch accepted upstream
+    # to deal with the buffer-name-being-overwritten issue.
+    def process(initial_buffer)
+      buffer = initial_buffer
+      original_name = buffer.name
+
+      @rewriters.each do |rewriter_class|
+        @parser.reset
+        ast = @parser.parse(buffer)
+
+        rewriter = rewriter_class.new
+        new_source = rewriter.rewrite(buffer, ast)
+
+        new_buffer = Parser::Source::Buffer.new(initial_buffer.name +
+                                                '|after ' + rewriter_class.name)
+        new_buffer.source = new_source
+
+        @parser.reset
+        new_ast = @parser.parse(new_buffer)
+
+        # if !@modify && ast != new_ast
+        #   $stderr.puts 'ASTs do not match:'
+
+        #   old = Tempfile.new('old')
+        #   old.write ast.inspect + "\n"; old.flush
+
+        #   new = Tempfile.new('new')
+        #   new.write new_ast.inspect + "\n"; new.flush
+
+        #   IO.popen("diff -u #{old.path} #{new.path}") do |io|
+        #     diff = io.read.
+        #       sub(/^---.*/,    "--- #{buffer.name}").
+        #       sub(/^\+\+\+.*/, "+++ #{new_buffer.name}")
+
+        #     $stderr.write diff
+        #   end
+
+        #   exit 1
+        # end
+
+        buffer = new_buffer
+      end
+
+      if File.exist?(original_name)
+        File.open(original_name, 'w') do |file|
+          file.write buffer.source
+        end
+      else
+        if input_size > 1
+          puts "Rewritten content of #{buffer.name}:"
+        end
+
+        puts buffer.source
+      end
+    end
+
     def initialize
       super
       # Order-of-operations issue in parser.  Not sure how it works there, but
