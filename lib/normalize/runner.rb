@@ -5,6 +5,26 @@ module Normalize
   class Runner < ::Parser::Runner::RubyRewrite
     private
 
+    # Overriding parent class here in order to handle syntax errors in the
+    # resulting AST gracefully (I.E. set a non-zero exit code).
+    def process_buffer(buffer)
+      @parser.reset
+
+      process(buffer)
+
+      @source_count += 1
+      @source_size  += buffer.source.size
+
+    rescue Parser::SyntaxError => pse
+      $stderr.puts("Failed due to syntax error: #{pse.message}")
+      exit 1
+      # skip
+
+    rescue StandardError
+      $stderr.puts("Failed on: #{buffer.name}")
+      raise
+    end
+
     def initialize
       super
       # Order-of-operations issue in parser.  Not sure how it works there, but
