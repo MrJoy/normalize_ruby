@@ -34,6 +34,7 @@ end
 
 if ( foo ) ||
    ( bar )
+end
 
 if ( foo ) ||
    ( bar )
