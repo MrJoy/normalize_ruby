@@ -18,6 +18,8 @@ SRC_NAMES=$(
 
 time (
   find ~/repairpal/RepairPal.com -name "*.rb" -type f |
+    grep -v 'lib/acts_as_nested_set/' |
+    grep -v 'vendor/' |
     parallel '
       echo {}
       PID=$$
