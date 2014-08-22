@@ -1,4 +1,6 @@
 #!/bin/bash
+# Using GNU Parallel, but not for publication.
+# \nocite{Tange2011a}
 IFS=$'\n\t'
 
 #time (
@@ -15,9 +17,11 @@ SRC_NAMES=$(
 )
 
 time (
-  for FNAME in $SRC_NAMES; do
-    echo $FNAME
-    ruby-rewrite --21 --modify --load bare_control_statements.rb "$FNAME" > tmp.rb &&
-      cat tmp.rb > "$FNAME"
-  done
+  find ~/repairpal/RepairPal.com -name "*.rb" -type f |
+    parallel '
+      echo {}
+      PID=$$
+      ruby-rewrite --21 --modify --load bare_control_statements.rb "{}" > tmp.$PID.rb &&
+        cat tmp.$PID.rb > "{}"
+      rm tmp.$PID.rb'
 )
