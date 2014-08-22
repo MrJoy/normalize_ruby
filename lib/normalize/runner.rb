@@ -13,9 +13,14 @@ module Normalize
     def setup_option_parsing
       super
 
-      # WARNING: The following can be DANGEROUS AS HELL, and we need to be sure
-      # WARNING: that our rewriters are mindful of it, lest weird output ensue!
-      @modify = true
+      # WARNING: We assume the AST can be modified by the filters -- which
+      # WARNING: sounds obvious, but I've seen wackiness ensue that was caught
+      # WARNING: by switching it off in some cases (IIRC, when playing with
+      # WARNING: whitespace filtering or quote-symbol rewriting, or some such)
+      # WARNING: and so we should consider re-enabling this stuff during
+      # WARNING: testing to find possible corner-cases where a filter does
+      # WARNING: incorrect things.
+      # @modify = true
       @rewriters = []
       @rewriters << Object.const_get('Normalize::Filters::BareControlStatements')
 
@@ -53,25 +58,25 @@ module Normalize
         @parser.reset
         new_ast = @parser.parse(new_buffer)
 
-        if !@modify && ast != new_ast
-          $stderr.puts 'ASTs do not match:'
+        # if !@modify && ast != new_ast
+        #   $stderr.puts 'ASTs do not match:'
 
-          old = Tempfile.new('old')
-          old.write ast.inspect + "\n"; old.flush
+        #   old = Tempfile.new('old')
+        #   old.write ast.inspect + "\n"; old.flush
 
-          new = Tempfile.new('new')
-          new.write new_ast.inspect + "\n"; new.flush
+        #   new = Tempfile.new('new')
+        #   new.write new_ast.inspect + "\n"; new.flush
 
-          IO.popen("diff -u #{old.path} #{new.path}") do |io|
-            diff = io.read.
-              sub(/^---.*/,    "--- #{buffer.name}").
-              sub(/^\+\+\+.*/, "+++ #{new_buffer.name}")
+        #   IO.popen("diff -u #{old.path} #{new.path}") do |io|
+        #     diff = io.read.
+        #       sub(/^---.*/,    "--- #{buffer.name}").
+        #       sub(/^\+\+\+.*/, "+++ #{new_buffer.name}")
 
-            $stderr.write diff
-          end
+        #     $stderr.write diff
+        #   end
 
-          exit 1
-        end
+        #   exit 1
+        # end
 
         buffer = new_buffer
       end
