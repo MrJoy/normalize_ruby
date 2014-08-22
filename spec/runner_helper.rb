@@ -2,8 +2,6 @@ require 'parser/runner/ruby_rewrite'
 
 module Normalize
   class TestRunner < ::Parser::Runner::RubyRewrite
-    private
-
     def initialize(rewriters)
       require 'parser/current'
       @parser_class                            = Parser::CurrentRuby
@@ -21,7 +19,7 @@ module Normalize
     # to deal with the buffer-name-being-overwritten issue.
     def process(fragment)
       initial_name  = "(fragment)"
-      buffer        = Source::Buffer.new(initial_name)
+      buffer        = Parser::Source::Buffer.new(initial_name)
       buffer.source = fragment
 
       @rewriters.each do |rewriter_class|
