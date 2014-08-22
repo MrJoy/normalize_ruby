@@ -11,6 +11,6 @@
 time (
   find ~/repairpal/RepairPal.com -name "*.rb" -type f | while read FNAME; do
     ruby-rewrite --21 --modify --load bare_control_statements.rb "$FNAME" > tmp.rb &&
-      mv -f tmp.rb "$FNAME"
+      cat tmp.rb > "$FNAME"
   done
 )
