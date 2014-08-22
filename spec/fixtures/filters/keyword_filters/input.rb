@@ -43,3 +43,14 @@ end
 foo if(bar)
 
 foo if ( bar ) # meh
+
+if(foo rescue nil)
+end
+
+if ( foo ||
+     bar )
+end
+
+                      # Comment
+if ( foo )            # Aligned comment
+end
