@@ -1,6 +1,6 @@
 require 'pathname'
-require 'normalize/filters/bare_control_statements'
 require 'normalize/runner'
+require 'normalize/filters/bare_control_statements'
 
 describe Normalize::Filters::BareControlStatements do
   let(:klass)         { Normalize::Filters::BareControlStatements }
