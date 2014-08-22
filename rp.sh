@@ -23,7 +23,7 @@ time (
     parallel '
       echo {}
       PID=$$
-      ruby-rewrite --21 --modify --load bare_control_statements.rb "{}" > tmp.$PID.rb &&
-        cat tmp.$PID.rb > "{}"
-      rm tmp.$PID.rb'
+      ruby-rewrite --21 --modify --load bare_control_statements.rb "{}" > tmp/tmp.$PID.rb &&
+        cat tmp/tmp.$PID.rb > "{}"
+      rm tmp/tmp.$PID.rb'
 )

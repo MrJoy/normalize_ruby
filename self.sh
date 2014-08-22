@@ -9,7 +9,7 @@ time (
   find . -name "*.rb" -type f |
     grep -v -E '^\./spec/fixtures' |
     while read FNAME; do
-      ruby-rewrite --21 --modify --load bare_control_statements.rb "$FNAME" > tmp.rb &&
-        cat tmp.rb > "$FNAME"
+      ruby-rewrite --21 --modify --load bare_control_statements.rb "$FNAME" > tmp/tmp.rb &&
+        cat tmp/tmp.rb > "$FNAME"
     done
 )
