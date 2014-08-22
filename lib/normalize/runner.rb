@@ -43,6 +43,9 @@ module Normalize
       return unless(@rewriters)
       super
 
+      # Remove options that aren't relevant anymore so CLI isn't confusing...
+      @slop.options.reject! { |opt| ["modify", "version"].include?(opt.long) }
+
       # WARNING: We assume the AST can be modified by the filters -- which
       # WARNING: sounds obvious, but I've seen wackiness ensue that was caught
       # WARNING: by switching it off in some cases (IIRC, when playing with
