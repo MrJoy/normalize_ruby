@@ -49,8 +49,10 @@ module Normalize
       end
 
       if File.exist?(original_name)
-        File.open(original_name, 'w') do |file|
-          file.write buffer.source
+        if initial_buffer.source != buffer.source
+          File.open(original_name, 'w') do |file|
+            file.write buffer.source
+          end
         end
       else
         if input_size > 1
