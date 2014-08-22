@@ -22,8 +22,8 @@ module Normalize
                                                 '|after ' + rewriter_class.name)
         new_buffer.source = new_source
 
-        @parser.reset
-        new_ast = @parser.parse(new_buffer)
+        # @parser.reset
+        # new_ast = @parser.parse(new_buffer)
 
         # if !@modify && ast != new_ast
         #   $stderr.puts 'ASTs do not match:'
