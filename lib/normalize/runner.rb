@@ -39,7 +39,7 @@ module Normalize
     end
 
     def setup_option_parsing
-      next unless(@rewriters)
+      return unless(@rewriters)
       super
 
       # WARNING: We assume the AST can be modified by the filters -- which
