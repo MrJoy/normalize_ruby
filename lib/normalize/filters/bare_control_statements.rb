@@ -6,7 +6,17 @@ module Normalize
         super
       end
 
+      def on_while_post(node)
+        cleanse_control_statement(node)
+        super
+      end
+
       def on_until(node)
+        cleanse_control_statement(node)
+        super
+      end
+
+      def on_until_post(node)
         cleanse_control_statement(node)
         super
       end
@@ -26,10 +36,15 @@ module Normalize
         super
       end
 
-      # def on_foreach(node)
-      #   cleanse_control_statement(node)
-      #   super
-      # end
+      def on_for(node)
+        cleanse_control_statement(node)
+        super
+      end
+
+      def on_case(node)
+        cleanse_control_statement(node)
+        super
+      end
 
       def cleanse_control_statement(node)
         begin
