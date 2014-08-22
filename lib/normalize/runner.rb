@@ -39,6 +39,7 @@ module Normalize
     end
 
     def setup_option_parsing
+      # Don't try to set things up before constructor has done its thing.
       return unless(@rewriters)
       super
 
