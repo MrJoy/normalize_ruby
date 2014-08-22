@@ -51,10 +51,6 @@ module Normalize
       # WARNING: incorrect things.
       @modify = true
       @rewriters << Object.const_get('Normalize::Filters::BareControlStatements')
-
-      # @slop.on 'l=', 'load=', 'Load a rewriter' do |file|
-      #   load_and_discover(file)
-      # end
     end
   end
 end
