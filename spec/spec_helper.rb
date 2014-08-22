@@ -90,5 +90,3 @@ end
 
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
-# Make token diffs less insane:
-RSPEC_RUNNING = true
