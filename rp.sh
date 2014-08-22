@@ -9,8 +9,14 @@ IFS=$'\n\t'
 #  xargs -n 1 bin/normalize_ruby.rb --clean-whitespace --prefer-double-quotes --prefer-bare-controls
 #)
 
+SRC_NAMES=$(
+  find ~/repairpal/RepairPal.com -name "*.rb" -type f |
+    grep -v 'lib/acts_as_nested_set/'
+)
+
 time (
-  find ~/repairpal/RepairPal.com -name "*.rb" -type f | while read FNAME; do
+  for FNAME in $SRC_NAMES; do
+    echo $FNAME
     ruby-rewrite --21 --modify --load bare_control_statements.rb "$FNAME" > tmp.rb &&
       cat tmp.rb > "$FNAME"
   done
