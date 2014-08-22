@@ -49,6 +49,15 @@ module Normalize
       def cleanse_control_statement(node)
         begin
           if node.children[0].type == :begin
+            # If we have something of the following form, the parens are NOT
+            # OPTIONAL!
+            #
+            # ```ruby
+            # if(foo rescue bar)
+            # ```
+            conditional = node.children[0].children[0]
+            return if !conditional || conditional.type == :rescue
+
             word_length           = node.loc.keyword.source.length
             word_starts_at        = node.loc.keyword.begin_pos
             condition_starts_at   = node.children[0].loc.begin.begin_pos
