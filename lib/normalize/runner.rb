@@ -50,7 +50,7 @@ module Normalize
       # WARNING: testing to find possible corner-cases where a filter does
       # WARNING: incorrect things.
       @modify = true
-      @rewriters << Object.const_get('Normalize::Filters::BareControlStatements')
+      @rewriters << Normalize::Filters::BareControlStatements
     end
   end
 end
