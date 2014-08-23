@@ -50,6 +50,7 @@ end
 if foo ||
    bar
 end
+
                       # Comment
 if foo                # Aligned comment
 end
