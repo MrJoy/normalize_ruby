@@ -62,6 +62,7 @@ module Normalize
             word_starts_at        = node.loc.keyword.begin_pos
             condition_starts_at   = node.children[0].loc.begin.begin_pos
             effective_word_length = condition_starts_at - word_starts_at
+            excess_gap_size       = 0
 
             if effective_word_length == word_length
               # No space, so we need to add one!
@@ -77,12 +78,14 @@ module Normalize
                 range     = Parser::Source::Range.new(buffer, begin_pos, end_pos)
 
                 remove range
+                excess_gap_size += 1
               else
                 # Just right -- one space.
                 remove node.children[0].loc.begin
+                excess_gap_size = 1
               end
             end
-            remove node.children[0].loc.end
+            replace node.children[0].loc.end, ' ' * (excess_gap_size + 1)
           end
         rescue
         end

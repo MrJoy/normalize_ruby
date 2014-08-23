@@ -47,11 +47,12 @@ module Normalize
 
         buffer = new_buffer
       end
+      result = buffer.source.split(/\n/).map(&:rstrip).join("\n")
 
       if File.exist?(original_name)
         if initial_buffer.source != buffer.source
           File.open(original_name, 'w') do |file|
-            file.write buffer.source
+            file.write result
           end
         end
       else
@@ -59,7 +60,7 @@ module Normalize
           puts "Rewritten content of #{buffer.name}:"
         end
 
-        puts buffer.source
+        puts result
       end
     end
 

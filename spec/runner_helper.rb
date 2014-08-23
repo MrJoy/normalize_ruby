@@ -36,7 +36,7 @@ module Normalize
         buffer = new_buffer
       end
 
-      return buffer.source
+      return buffer.source.split(/\n/).map(&:rstrip).join("\n")
     end
   end
 end
