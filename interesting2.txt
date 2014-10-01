@@ -1,0 +1,12 @@
+https://github.com/rubiety/ruby_transform
+  https://github.com/rubiety/ruby_transform/blob/master/lib/ruby_transform/transformers/block_method_to_procifier.rb
+  https://github.com/rubiety/ruby_transform/blob/master/lib/ruby_transform/transformers/clear_explicit_returns.rb
+  https://github.com/seattlerb/ruby_parser/blob/master/History.txt
+    * 1.9 parsing! Thanks to EVERYONE for submitting patches for this!
+    * Removed :arglist from everything but :op_asgn1
+    * Removed :block from resbody
+    * Removed :block from when
+    * Removed :block nodes inside of scope nodes (defn/defs/class/sclass).
+    * Removed :scope nodes in defn/defs/class/sclass nodes.
+    * (probably more sexp cleanup to come before 3.0.0 final)
+# See RubyParser + forks...

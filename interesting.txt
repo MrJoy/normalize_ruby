@@ -1,0 +1,40 @@
+https://github.com/aquasync/ruby-ometa
+
+https://github.com/ruben2020/codequery
+
+      alias on_dstr     process_regular_node
+      alias on_dsym     process_regular_node
+      alias on_xstr     process_regular_node
+      alias on_mlhs     process_regular_node
+      alias on_masgn    process_regular_node
+
+      alias on_module         process_regular_node
+      alias on_class          process_regular_node
+      alias on_sclass         process_regular_node
+      def on_def(node)
+      def on_defs(node)
+      alias on_alias    process_regular_node
+      alias on_block    process_regular_node
+      alias on_while      process_regular_node
+      alias on_while_post process_regular_node
+      alias on_until      process_regular_node
+      alias on_until_post process_regular_node
+      alias on_for        process_regular_node
+      alias on_redo     process_regular_node
+      alias on_retry    process_regular_node
+      alias on_super    process_regular_node
+      alias on_yield    process_regular_node
+      alias on_if       process_regular_node
+      alias on_when     process_regular_node
+      alias on_case     process_regular_node
+      alias on_iflipflop process_regular_node
+      alias on_eflipflop process_regular_node
+      alias on_match_current_line process_regular_node
+      alias on_match_with_lvasgn  process_regular_node
+      alias on_resbody  process_regular_node
+      alias on_rescue   process_regular_node
+      alias on_ensure   process_regular_node
+      alias on_begin    process_regular_node
+      alias on_kwbegin  process_regular_node
+      alias on_preexe   process_regular_node
+      alias on_postexe  process_regular_node
